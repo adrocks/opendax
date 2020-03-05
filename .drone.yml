@@ -7,7 +7,7 @@ steps:
   commands:
     - gem install bundler
     - bundle
-    - rspec
+    - bundle exec rspec
   when:
     event:
       - pull_request

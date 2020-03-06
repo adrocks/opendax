@@ -18,3 +18,6 @@ vendor/
 *.tfvars
 terraform.tfstate*
 !data/parity/.gitkeep
+# add later
+/.bundle
+

@@ -20,4 +20,9 @@ terraform.tfstate*
 !data/parity/.gitkeep
 # add later
 /.bundle
-
+.env
+compose/*.yaml
+config/postmaster.yml
+config/arke/etl.yml
+config/arke/strategies.yml
+config/gateway/envoy.yaml

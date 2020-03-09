@@ -261,6 +261,24 @@ namespace :service do
 
     @switch.call(args, method(:start), method(:stop))
   end
+
+  desc 'Run phpmyadmin'
+  task :pma, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the phpmyadmin -----'
+      sh 'docker-compose up -d pma'
+    end
+
+    def stop
+      puts '----- Stopping the phpmyadmin -----'
+      sh 'docker-compose rm -fs pma'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
   desc 'Run the micro app with dependencies (does not run Optional)'
   task :all, [:command] => 'render:config' do |task, args|
     args.with_defaults(:command => 'start')

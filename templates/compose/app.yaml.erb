@@ -14,6 +14,10 @@ services:
       - ../config/peatio/plugins.yml:/opt/peatio/config/plugins.yml
     labels: {}
     command: bash -c "bin/link_config && bundle exec puma --config config/puma.rb"
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host: swagger.<%= @config['app']['domain'] %>"
+      traefik.port: 8000
 
   barong:
     restart: always
@@ -26,6 +30,10 @@ services:
       - ../config/barong/barong.yml:/home/app/config/barong.yml
       - ../config/barong/authz_rules.yml:/home/app/config/authz_rules.yml
       - ../config/barong/management_api.yml:/home/app/config/management_api.yml
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host: swagger-barong.<%= @config['app']['domain'] %>"
+      traefik.port: 8001
 
   arke:
     image: "<%= @utils['images']['arke'] %>"

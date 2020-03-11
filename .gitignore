@@ -21,6 +21,7 @@ terraform.tfstate*
 # add later
 /.bundle
 .env
+config/app.yml
 compose/*.yaml
 config/postmaster.yml
 config/arke/etl.yml

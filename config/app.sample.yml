@@ -62,3 +62,5 @@ terraform:
   image: "debian-cloud/debian-9"
 pma:
   basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.
+kibana:
+  basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.

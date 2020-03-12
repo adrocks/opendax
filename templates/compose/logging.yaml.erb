@@ -1,0 +1,57 @@
+# From
+# https://github.com/naokirin/sample-logspout-to-kibana
+
+version: '3.6'
+
+services:
+
+  #elasticsearch_old_index_deletion:
+  #  build: ./elasticsearch_old_index_deletion
+
+  logspout:
+    image: gliderlabs/logspout:v3.2.4
+    command: syslog://logstash:5000
+    environment:
+      - RETRY_COUNT=100
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.2.2
+    environment:
+      - LOGSPOUT=ignore
+      - XPACK_WATCHER_ENABLED=false
+      - XPACK_MONITORING_ENABLED=false
+    volumes:
+      - ../config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.2
+    environment:
+      - LOGSPOUT=ignore
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: "Host:kibana.<%= @config['app']['domain'] %>"
+      traefik.frontend.auth.basic: '<%= @config['kibana']['basic_auth'] %>'
+      traefik.port: 5601
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+    environment:
+      - LOGSPOUT=ignore
+      - node.name=dev-log-kibana
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.watcher.enabled=false
+      - xpack.graph.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+

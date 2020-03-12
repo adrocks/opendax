@@ -262,7 +262,7 @@ namespace :service do
     @switch.call(args, method(:start), method(:stop))
   end
 
-  desc 'Run phpmyadmin'
+  desc '[Optional] Run phpmyadmin'
   task :pma, [:command] do |task, args|
     args.with_defaults(:command => 'start')
 
@@ -274,6 +274,23 @@ namespace :service do
     def stop
       puts '----- Stopping the phpmyadmin -----'
       sh 'docker-compose rm -fs pma'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
+  desc '[Optional] Run Logging'
+  task :logging, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the Logging -----'
+      sh 'docker-compose up -d logspout logstash kibana elasticsearch'
+    end
+
+    def stop
+      puts '----- Stopping the Logging -----'
+      sh 'docker-compose rm -fs logspout logstash kibana elasticsearch'
     end
 
     @switch.call(args, method(:start), method(:stop))

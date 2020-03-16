@@ -28,6 +28,7 @@ config/arke/etl.yml
 config/arke/strategies.yml
 config/gateway/envoy.yaml
 data/parity
+data/bitcoin
 config/bitcoin.conf
 config/litecoin.conf
 ardor.conf

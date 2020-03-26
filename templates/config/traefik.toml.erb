@@ -14,6 +14,43 @@ defaultEntryPoints = [<%= '"https",' if @config['ssl']['enabled'] %>"http"]
   [entryPoints.https.tls]
 <% end -%>
 
+######## Add for debug on localhost
+
+# Logs are written to stdout
+# (Use docker logs -f to see)
+# Defining section names (with empty definition inside)
+# are required to enable
+
+#[traefikLog]
+
+#[accessLog]
+
+# File section
+# backends and frontends are placed in file section
+
+[file]
+
+[backends]
+  [backends.backend1]
+    [backends.backend1.servers]
+      [backends.backend1.servers.server0]
+        # Redirect to host os's ip or localhost
+        # Win or Mac docker localhost:
+        #url = "http://host.docker.internal:3001"
+        # Unix standard docker config:
+        # (Ruby or npm running on host os listening on 0.0.0.0)
+        url = "http://172.17.0.1:3001"
+        weight = 1
+
+[frontends]
+  [frontends.frontend1]
+    backend = "backend1"
+    passHostHeader = true
+    [frontends.frontend1.routes.host]
+      rule = "PathPrefix:/pconsole;Host:<%= @config['app']['subdomain'] %>.<%= @config['app']['domain'] %>"
+
+########
+
 [retry]
 
 [docker]

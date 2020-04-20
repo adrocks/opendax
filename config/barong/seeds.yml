@@ -6,12 +6,12 @@
 #
 # Note: email is the only required field here.
 users:
-  - email: admin@barong.io
+  - email: admin@plusqo.com
     password: 0lDHd9ufs9t@
     role: admin
     state: active
     level: 3
-  - email: john@barong.io
+  - email: john@plusqo.com
     password: Am8icnzEI3d!
     role: member
     state: active

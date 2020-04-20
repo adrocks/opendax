@@ -7,22 +7,22 @@
 # Note: email is the only required field here.
 users:
   - email: admin@plusqo.com
-    password: Xr7b3#ILQMvd
+    password: <%= @config['app']['adminPass'] %>
     role: admin
     state: active
     level: 3
   - email: one@plusqo.com
-    password: YzLE2xJC59#O
+    password: <%= @config['app']['testUserPass'] %>
     role: member
     state: active
     level: 3
   - email: two@plusqo.com
-    password: YzLE2xJC59#O
+    password: <%= @config['app']['testUserPass'] %>
     role: member
     state: active
     level: 3
   - email: three@plusqo.com
-    password: YzLE2xJC59#O
+    password: <%= @config['app']['testUserPass'] %>
     role: member
     state: active
     level: 3

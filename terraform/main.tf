@@ -45,7 +45,7 @@ resource "google_compute_instance" "opendax" {
   }
 
   provisioner "local-exec" {
-    command = "mkdir -p /tmp/upload && rsync -rv --exclude=terraform ../ /tmp/upload/"
+    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --exclude=terraform ../ /tmp/upload/"
   }
 
   provisioner "remote-exec" {

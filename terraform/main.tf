@@ -11,12 +11,28 @@ resource "random_id" "opendax" {
   byte_length = 2
 }
 
+resource "google_compute_disk" "blockchain-testnet" {
+  name  = "blockchain-testnet-disk"
+  type  = "pd-standard"
+  zone  = var.zone
+  size  = 120
+}
+
+resource "google_compute_attached_disk" "opendax" {
+  disk     = google_compute_disk.blockchain-testnet.id
+  instance = google_compute_instance.opendax.id
+}
+
 resource "google_compute_instance" "opendax" {
   name         = "${var.instance_name}-${random_id.opendax.hex}"
   machine_type = var.machine_type
   zone         = var.zone
 
   allow_stopping_for_update = true
+
+  lifecycle {
+    ignore_changes = [attached_disk]
+  }
 
   boot_disk {
     initialize_params {
@@ -25,7 +41,7 @@ resource "google_compute_instance" "opendax" {
       size  = 120
     }
   }
-
+  
   network_interface {
     network = google_compute_network.opendax.name
 

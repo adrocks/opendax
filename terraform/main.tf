@@ -1,10 +1,12 @@
 provider "google" {
+  version = "~> 3.18"
   credentials = file(var.credentials)
   project     = var.project
   region      = var.region
 }
 
 provider "random" {
+  version = "~> 2.2"
 }
 
 resource "random_id" "opendax" {
@@ -12,7 +14,6 @@ resource "random_id" "opendax" {
 }
 
 resource "google_compute_disk" "opendax" {
-  name  = "opendax-docker-volumes"
   name = "opendax-docker-volumes-${random_id.opendax.hex}"
   type  = "pd-ssd"
   zone  = var.zone
@@ -135,3 +136,57 @@ resource "google_compute_network" "opendax" {
   name = "opendax-network-${random_id.opendax.hex}"
 }
 
+provider "cloudflare" {
+  version = "~> 2.0"
+  api_token  = var.cloudflare_token
+}
+
+resource "cloudflare_record" "opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "kibana-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "kibana.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "www-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "www.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "pma-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "pma.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "superset-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "superset.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "swagger-barong-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "swagger-barong.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "swagger-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "swagger.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}

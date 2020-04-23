@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Initialize GCP Compute Engine's external sdb disk
+# Attach GCP Compute Engine(VM)'s external sdb disk
 #  immediately after terraform:apply finish,
 #   execute this as soon as possible because of a disk space shortage.
-#    you have to move all docker's data to sdb disk mounted.
+#  (Use this when VM is destroyed and re-created by terraform
+#   because of boot disk size change or something)
 
 #  For user "deploy" in GCP Compute engine.
 
@@ -12,10 +13,7 @@ if [ $USER != "deploy" ]; then
     exit
 fi
 
-read -p "DANGER!!!: YOU ARE GOING TO FORMAT SDB DISK. ARE YOU OK? (y/N): " yn
-case "$yn" in [yY]*) ;; *) echo "Abort." ; exit ;; esac
-
-read -p "REALLY? (y/N): " yn
+read -p "You are going to attach sdb disk. Are you OK? (y/N): " yn
 case "$yn" in [yY]*) ;; *) echo "Abort." ; exit ;; esac
 
 cd /home/deploy/opendax
@@ -30,13 +28,12 @@ cd /home/deploy
 # See GCP doc
 # https://cloud.google.com/compute/docs/disks/add-persistent-disk?hl=ja
 
-sudo mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb
 sudo mkdir -p /mnt/disks/sdb
 sudo mount -o discard,defaults /dev/sdb /mnt/disks/sdb
 sudo chmod a+w /mnt/disks/sdb
 
-# Move docker's data to sdb 
-sudo mv ~/docker_volumes /mnt/disks/sdb
+# Attach docker's data to sdb 
+sudo rm -rf ~/docker_volumes
 sudo ln -s /mnt/disks/sdb/docker_volumes /home/deploy/docker_volumes
 
 # For reboot

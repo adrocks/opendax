@@ -13,9 +13,10 @@ resource "random_id" "opendax" {
 
 resource "google_compute_disk" "opendax" {
   name  = "opendax-docker-volumes"
+  name = "opendax-docker-volumes-${random_id.opendax.hex}"
   type  = "pd-ssd"
   zone  = var.zone
-  size  = 120
+  size  = 60
 }
 
 resource "google_compute_attached_disk" "opendax" {

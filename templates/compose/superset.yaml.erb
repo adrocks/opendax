@@ -13,3 +13,7 @@ services:
 
 volumes:
   superset_db:
+    driver_opts:
+      type: none
+      device: "<%= @config['app']['docker_volumes_path'] %>/superset_db"
+      o: bind

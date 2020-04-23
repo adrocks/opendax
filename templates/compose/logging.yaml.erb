@@ -21,7 +21,7 @@ services:
   #  build: ./elasticsearch_old_index_deletion
 
   logspout:
-    image: gliderlabs/logspout:v3.2.4
+    image: gliderlabs/logspout:v3.2.8
     command: syslog://logstash:5000
     environment:
       - RETRY_COUNT=100
@@ -29,7 +29,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:6.2.2
+    image: docker.elastic.co/logstash/logstash:6.8.8
     environment:
       - LOGSPOUT=ignore
       - XPACK_WATCHER_ENABLED=false
@@ -38,7 +38,7 @@ services:
       - ../config/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.2
+    image: docker.elastic.co/kibana/kibana:6.8.8
     environment:
       - LOGSPOUT=ignore
       - ELASTICSEARCH_URL=http://elasticsearch:9200
@@ -49,7 +49,7 @@ services:
       traefik.port: 5601
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.8
     environment:
       - LOGSPOUT=ignore
       - node.name=dev-log-kibana
@@ -66,4 +66,12 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 
+volumes:
+  es_data:
+    driver_opts:
+      type: none
+      device: "<%= @config['app']['docker_volumes_path'] %>/es_data"
+      o: bind

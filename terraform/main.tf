@@ -11,15 +11,15 @@ resource "random_id" "opendax" {
   byte_length = 2
 }
 
-resource "google_compute_disk" "blockchain-testnet" {
-  name  = "blockchain-testnet-disk"
-  type  = "pd-standard"
+resource "google_compute_disk" "opendax" {
+  name  = "opendax-docker-volumes"
+  type  = "pd-ssd"
   zone  = var.zone
   size  = 120
 }
 
 resource "google_compute_attached_disk" "opendax" {
-  disk     = google_compute_disk.blockchain-testnet.id
+  disk     = google_compute_disk.opendax.id
   instance = google_compute_instance.opendax.id
 }
 
@@ -38,7 +38,7 @@ resource "google_compute_instance" "opendax" {
     initialize_params {
       image = var.image
       type  = "pd-ssd"
-      size  = 120
+      size  = 30
     }
   }
   

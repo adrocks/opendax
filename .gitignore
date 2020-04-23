@@ -32,3 +32,4 @@ data/bitcoin
 config/bitcoin.conf
 config/litecoin.conf
 ardor.conf
+config/barong/seeds.yml

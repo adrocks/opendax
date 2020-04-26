@@ -63,7 +63,7 @@ resource "google_compute_instance" "opendax" {
   }
 
   provisioner "local-exec" {
-    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --exclude=terraform ../ /tmp/upload/"
+    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../ /tmp/upload/"
   }
 
   provisioner "remote-exec" {
@@ -92,7 +92,7 @@ resource "google_compute_instance" "opendax" {
   }
 
   provisioner "remote-exec" {
-    script = "../bin/install.sh"
+    script = "../../bin/install.sh"
 
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
@@ -103,7 +103,7 @@ resource "google_compute_instance" "opendax" {
   }
 
   provisioner "remote-exec" {
-    script = "../bin/start.sh"
+    script = "../../bin/start.sh"
 
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip

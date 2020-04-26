@@ -33,3 +33,5 @@ config/bitcoin.conf
 config/litecoin.conf
 ardor.conf
 config/barong/seeds.yml
+/config/app.yml.d/*.yml
+.*.tfstate.lock.info

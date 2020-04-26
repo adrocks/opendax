@@ -21,7 +21,6 @@ terraform.tfstate*
 # add later
 /.bundle
 .env
-config/app.yml
 compose/*.yaml
 config/postmaster.yml
 config/arke/etl.yml
@@ -34,4 +33,5 @@ config/litecoin.conf
 ardor.conf
 config/barong/seeds.yml
 /config/app.yml.d/*.yml
+!/config/app.yml.d/sample.app.yml
 .*.tfstate.lock.info

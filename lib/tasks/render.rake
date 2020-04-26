@@ -9,11 +9,11 @@ namespace :render do
     renderer.render
   end
 
-  desc 'Select app.yml for render:config [local|prd|stg|gcpdemo]'
+  desc 'Select app.yml for render:config [local|sample|prd|stg|gcpdemo]'
   task :select, [:app] do |_, args|
     args.with_defaults(:app => 'local')
     Dir.chdir('config') {
-      if (args.app == 'local' || args.app == 'prd' ||
+      if (args.app == 'local' || args.app == 'sample' || args.app == 'prd' ||
         args.app == 'stg' || args.app == 'gcpdemo') then
         `ln -sf app.yml.d/#{args.app}.app.yml app.yml`
       end

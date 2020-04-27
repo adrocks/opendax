@@ -1,0 +1,7 @@
+gcp:
+  credentials: "../../../credentials/gcp.json"
+hcloud:
+  token: "../../../credentials/hcloud_token.txt"
+  ssh_fingerprint: "../../../credentials/hcloud_ssh_fingerprint.txt"
+cloudflare:
+  token: "../../../credentials/cloudflare_token.txt"

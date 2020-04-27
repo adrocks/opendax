@@ -31,7 +31,6 @@ namespace :terraform do
   task :init do
     next unless linked_app
     puts "terraform:init: #{linked_app}"
-    show_afterwards
     Dir.chdir("terraform/#{linked_app}") { sh 'terraform init' }
     show_afterwards
   end
@@ -40,6 +39,7 @@ namespace :terraform do
   task :apply do
     next unless linked_app
     puts "terraform:apply: #{linked_app}"
+    Rake::Task["render:config"].invoke
     Dir.chdir("terraform/#{linked_app}") { sh 'terraform apply' }
     show_afterwards
   end
@@ -48,6 +48,7 @@ namespace :terraform do
   task :plan do
     next unless linked_app
     puts "terraform:plan: #{linked_app}"
+    Rake::Task["render:config"].invoke
     Dir.chdir("terraform/#{linked_app}") { sh 'terraform plan' }
     show_afterwards
   end
@@ -56,6 +57,7 @@ namespace :terraform do
   task :destroy do
     next unless linked_app
     puts "terraform:destroy: #{linked_app}"
+    Rake::Task["render:config"].invoke
     Dir.chdir("terraform/#{linked_app}") { sh 'terraform destroy' }
     show_afterwards
   end

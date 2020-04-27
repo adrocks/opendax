@@ -10,7 +10,11 @@ DEPLOY_PATH = 'config/deploy.yml'.freeze
 #### Copy sample yml.
 
 Dir.chdir('config') do
-  File.readlink("app.yml")
+  # Only when local
+  # (when remote, app.yml is not symlink by install.sh)
+  if (ENV['USER'] != 'deploy') then
+    File.readlink("app.yml")
+  end
 rescue
   # config/app.yml symlink not found = seems first time
   FileUtils.symlink("app.yml.d/sample.app.yml", "app.yml", {:force => true})
@@ -32,6 +36,7 @@ end
 
 @config = YAML.load_file(CONFIG_PATH)
 @utils = YAML.load_file(UTILS_PATH)
+@deploy = YAML.load_file(DEPLOY_PATH)
 
 # Add your own tasks in files placed in lib/tasks ending in .rake
 Dir.glob('lib/tasks/*.rake').each do |task|

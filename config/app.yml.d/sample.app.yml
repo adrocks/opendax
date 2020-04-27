@@ -1,19 +1,20 @@
 app:
-  name: "OpenDAX"
+  name: "OpenDAX (sample)"
   domain: "app.local"
   subdomain: "www"
   adminPass: "xxxx"
   testUserPass: "xxxx"
+  docker_volumes_path: "/home/user/docker_volumes"
 render_protect: false
 ssl:
   enabled: false    # Make sure to enable during deployment
   email: "support@example.com"
 images:
-  peatio: quay.io/openware/peatio:2.3.47
-  barong: quay.io/openware/barong:2.3.45
-  frontend: quay.io/openware/baseapp:2.3.26 # Check on quay.io/openware/baseapp for latest tags
+  peatio: yuknak/peatio:2.3.47
+  barong: yuknak/barong:2.3.45
+  frontend: yuknak/baseapp:2.3.26 # Check on quay.io/openware/baseapp for latest tags
   tower: quay.io/openware/tower:2.3.137
-  postmaster: quay.io/openware/postmaster:2.3.5
+  postmaster: yuknak/postmaster:2.3.5
 arke_proxy:
   enabled: false
 vendor:
@@ -105,6 +106,9 @@ terraform:
   instance_name: "opendax-cloud"
   machine_type: "n1-standard-4"
   image: "debian-cloud/debian-9"
+  network: changeme
+cloudflare:
+  zone_id: changeme
 pma:
   basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.
 kibana:

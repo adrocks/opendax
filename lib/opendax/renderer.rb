@@ -18,6 +18,7 @@ module Opendax
     def render
       @config ||= config
       @utils  ||= utils
+      @deploy  ||= deploy
       @barong_key ||= OpenSSL::PKey::RSA.new(File.read(BARONG_KEY), '')
       @applogic_key ||= OpenSSL::PKey::RSA.new(File.read(APPLOGIC_KEY), '')
       @barong_private_key ||= Base64.urlsafe_encode64(@barong_key.to_pem)
@@ -72,6 +73,10 @@ module Opendax
 
     def utils
       YAML.load_file('./config/utils.yml')
+    end
+
+    def deploy
+      YAML.load_file('./config/deploy.yml')
     end
   end
 end

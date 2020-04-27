@@ -138,7 +138,7 @@ resource "google_compute_network" "opendax" {
 
 provider "cloudflare" {
   version = "~> 2.0"
-  api_token  = var.cloudflare_token
+  api_token  = file(var.cloudflare_token)
 }
 
 resource "cloudflare_record" "opendax2" {

@@ -92,3 +92,57 @@ resource "hcloud_server" "opendax" {
   }
 }
 
+provider "cloudflare" {
+  version = "~> 2.0"
+  api_token  = var.cloudflare_token
+}
+
+resource "cloudflare_record" "opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "kibana-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "kibana.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "www-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "www.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "pma-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "pma.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "superset-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "superset.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "swagger-barong-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "swagger-barong.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}
+resource "cloudflare_record" "swagger-opendax2" {
+  zone_id = var.cloudflare_zone_id
+  name    = "swagger.opendax2"
+  value   = google_compute_address.opendax.address
+  type    = "A"
+  ttl     = 1
+}

@@ -18,9 +18,12 @@ vendor/
 *.tfvars
 terraform.tfstate*
 !data/parity/.gitkeep
+
 # add later
 /.bundle
 .env
+config/deploy.yml
+config/app.yml
 compose/*.yaml
 config/postmaster.yml
 config/arke/etl.yml

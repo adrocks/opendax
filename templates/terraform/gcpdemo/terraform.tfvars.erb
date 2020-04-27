@@ -1,12 +1,15 @@
-credentials = "<%= @config['terraform']['credentials'] %>"
-project = "<%= @config['terraform']['project'] %>"
-region = "<%= @config['terraform']['region'] %>"
-zone = "<%= @config['terraform']['zone'] %>"
 ssh_user = "deploy"
 ssh_public_key = "../../config/secrets/app.key.pub"
 ssh_private_key = "../../config/secrets/app.key"
+
+cloudflare_token = "<%= @deploy['cloudflare']['token'] %>"
+cloudflare_zone_id = "<%= @config['cloudflare']['zone_id'] %>"
+
+credentials = "<%= @deploy['gcp']['credentials'] %>"
+
+project = "<%= @config['terraform']['project'] %>"
+region = "<%= @config['terraform']['region'] %>"
+zone = "<%= @config['terraform']['zone'] %>"
 instance_name = "<%= @config['terraform']['instance_name'] %>"
 machine_type = "<%= @config['terraform']['machine_type'] %>"
 image = "<%= @config['terraform']['image'] %>"
-cloudflare_zone_id = "<%= @config['cloudflare']['zone_id'] %>"
-cloudflare_token = "<%= @config['cloudflare']['token'] %>"

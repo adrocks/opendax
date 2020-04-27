@@ -10,12 +10,10 @@ variable "ssh_user" {
 
 variable "ssh_public_key" {
   type        = string
-  description = "Location of the public RSA key used for SSH-ing onto the main VM"
 }
 
 variable "ssh_private_key" {
   type        = string
-  description = "Location of the private RSA key used for SSH-ing onto the main VM"
 }
 
 variable "project" {

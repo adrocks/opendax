@@ -1,41 +1,37 @@
+################################################################################
+# App: gcpdemo (staging spec.)
+# * Peatio system demonstration on Google Cloud Platform
+# * Staging spec (testnet and valut not used)
+# * https://www.gcpdemo.plusqo.com/
+
+################################################################################
+# Google Cloud Platform
+
+################ Common
+
 provider "google" {
   version = "~> 3.18"
   credentials = file(var.credentials)
   project     = var.project
   region      = var.region
 }
-
 provider "random" {
   version = "~> 2.2"
 }
-
 resource "random_id" "opendax" {
   byte_length = 2
 }
 
-resource "google_compute_disk" "opendax" {
-  name = "opendax-docker-volumes-${random_id.opendax.hex}"
-  type  = "pd-ssd"
-  zone  = var.zone
-  size  = 60
-}
+################ Peatio
 
-resource "google_compute_attached_disk" "opendax" {
-  disk     = google_compute_disk.opendax.id
-  instance = google_compute_instance.opendax.id
-}
-
-resource "google_compute_instance" "opendax" {
-  name         = "${var.instance_name}-${random_id.opendax.hex}"
-  machine_type = var.machine_type
+resource "google_compute_instance" "peatio" {
+  name         = "peatio-${random_id.opendax.hex}"
+  machine_type = "n1-standard-2"
   zone         = var.zone
-
   allow_stopping_for_update = true
-
   lifecycle {
     ignore_changes = [attached_disk]
   }
-
   boot_disk {
     initialize_params {
       image = var.image
@@ -43,150 +39,153 @@ resource "google_compute_instance" "opendax" {
       size  = 30
     }
   }
-  
   network_interface {
     network = google_compute_network.opendax.name
-
     access_config {
-      nat_ip = google_compute_address.opendax.address
+      nat_ip = google_compute_address.peatio.address
     }
   }
-
   service_account {
     scopes = ["storage-ro"]
   }
-
   tags = ["allow-webhook"]
-
   metadata = {
-    sshKeys = "${var.ssh_user}:${file(var.ssh_public_key)}"
+    sshKeys = "deploy:${file(var.ssh_public_key)}"
   }
-
   provisioner "local-exec" {
     command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../ /tmp/upload/"
   }
-
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p /home/${var.ssh_user}/opendax",
+      "mkdir -p /home/deploy/opendax",
     ]
-
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
-      user        = var.ssh_user
+      user        = "deploy"
       private_key = file(var.ssh_private_key)
     }
   }
-
   provisioner "file" {
     source      = "/tmp/upload/"
-    destination = "/home/${var.ssh_user}/opendax"
-
+    destination = "/home/deploy/opendax"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
-      user        = var.ssh_user
+      user        = "deploy"
       private_key = file(var.ssh_private_key)
     }
   }
-
   provisioner "remote-exec" {
     script = "../../bin/install.sh"
-
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
-      user        = var.ssh_user
+      user        = "deploy"
       private_key = file(var.ssh_private_key)
     }
   }
-
   provisioner "remote-exec" {
     script = "../../bin/start.sh"
-
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
-      user        = var.ssh_user
+      user        = "deploy"
       private_key = file(var.ssh_private_key)
     }
   }
 }
+
+resource "google_compute_address" "peatio" {
+  name = "opendax-ip-${random_id.opendax.hex}"
+}
+resource "google_compute_disk" "peatio" {
+  name = "peatio-docker-volumes-${random_id.opendax.hex}"
+  type  = "pd-ssd"
+  zone  = var.zone
+  size  = 60
+}
+resource "google_compute_attached_disk" "peatio" {
+  disk     = google_compute_disk.peatio.id
+  instance = google_compute_instance.peatio.id
+}
+
+################ Shared resources
 
 resource "google_compute_firewall" "opendax" {
   name    = "opendax-firewall-${random_id.opendax.hex}"
   network = google_compute_network.opendax.name
-
   allow {
     protocol = "tcp"
     ports    = ["80", "8080", "1337", "443", "22"]
   }
-
   source_ranges = ["0.0.0.0/0"]
-
   target_tags = ["allow-webhook"]
 }
-
-resource "google_compute_address" "opendax" {
-  name = "opendax-ip-${random_id.opendax.hex}"
-}
-
 resource "google_compute_network" "opendax" {
   name = "opendax-network-${random_id.opendax.hex}"
 }
+
+################################################################################
+# Cloudflare
+
+################ Common
 
 provider "cloudflare" {
   version = "~> 2.0"
   api_token  = file(var.cloudflare_token)
 }
 
-resource "cloudflare_record" "opendax2" {
+################ Peatio
+
+resource "cloudflare_record" "peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "kibana-opendax2" {
+resource "cloudflare_record" "kibana-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "kibana.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "kibana.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "www-opendax2" {
+resource "cloudflare_record" "www-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "www.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "www.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "pma-opendax2" {
+resource "cloudflare_record" "pma-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "pma.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "pma.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "superset-opendax2" {
+resource "cloudflare_record" "superset-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "superset.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "superset.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "swagger-barong-opendax2" {
+resource "cloudflare_record" "swagger-barong-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "swagger-barong.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "swagger-barong.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
-resource "cloudflare_record" "swagger-opendax2" {
+resource "cloudflare_record" "swagger-peatio" {
   zone_id = var.cloudflare_zone_id
-  name    = "swagger.opendax2"
-  value   = google_compute_address.opendax.address
+  name    = "swagger.gcpdemo"
+  value   = google_compute_address.peatio.address
   type    = "A"
   ttl     = 1
 }
+
+################################################################################

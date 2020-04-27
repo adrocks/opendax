@@ -1,9 +1,10 @@
+common:
+  ssh_key: "../../../credentials/ssh_key.txt"
+  ssh_key_pub: "../../../credentials/ssh_key.pub.txt"
 gcp:
   credentials: "../../../credentials/gcp.json"
 hcloud:
   token: "../../../credentials/hcloud_token.txt"
   ssh_fingerprint: "../../../credentials/hcloud_ssh_fingerprint.txt"
-  ssh_key: "../../../credentials/hcloud_ssh_key.txt"
-  ssh_key_pub: "../../../credentials/hcloud_ssh_key.pub.txt"
 cloudflare:
   token: "../../../credentials/cloudflare_token.txt"

@@ -1,3 +1,12 @@
+# DO NOT EDIT THIS SAMPLE FILE !
+# DO NOT WRITE YOUR SECRET INFO AND CHECK-IN!
+################################################################################
+# config/app.yml.d/sample.app.yml
+#
+# This is a SAMPLE of *.app.yml
+# You have to copy this to local.app.yml and edit for yourself.
+# and bundle exec rake render:select[local]
+################################################################################
 app:
   name: "OpenDAX (sample)"
   domain: "app.local"

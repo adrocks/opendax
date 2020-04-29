@@ -2,9 +2,32 @@
 require_relative '../opendax/renderer'
 
 namespace :render do
+
+  top_level = self
+
+  using Module.new {
+    refine(top_level.singleton_class) do
+      def check_app
+        Dir.chdir('config') do
+          link_to = File.readlink('app.yml')
+          app = File.basename(link_to).split('.')[0]
+          if (app == "sample") then
+            puts "You have to prepare config/app.yml.d/local.app.yml"
+            puts "And 'bundle exec rake render:select[local]'"
+            return nil
+          end
+          app
+          rescue
+            puts "Can't readlink: config/app.yml."
+        end
+      end
+    end
+  } 
+
   desc 'Render configuration and compose files and keys'
   task :config do
-    # Must be chown $USER and chmod 666 
+    next if (!check_app)
+    # Must be chown $USER
     unless (File.exist?("config/bitcoin.conf")) then
       sh "touch config/bitcoin.conf"
     end

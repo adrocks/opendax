@@ -17,9 +17,6 @@ namespace :terraform do
           app
           rescue
             puts "Can't readlink: config/app.yml."
-            puts "Maybe you have to put local.app.yml into config/app.yml.d/"
-            puts "(Customize based on config/app.yml.d/sample.app.yml)"
-            puts "And then exec, 'bundle exec rake render:select[local]' first."
         end
       end
       def show_afterwards

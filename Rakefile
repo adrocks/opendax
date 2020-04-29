@@ -35,6 +35,8 @@ end
 ####
 
 @config = YAML.load_file(CONFIG_PATH)
+@config['app']['docker_volumes_path'].gsub!(/__USER__/, ENV['USER'])
+
 @utils = YAML.load_file(UTILS_PATH)
 @deploy = YAML.load_file(DEPLOY_PATH)
 

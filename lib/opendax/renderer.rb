@@ -26,6 +26,8 @@ module Opendax
       @applogic_private_key ||= Base64.urlsafe_encode64(@applogic_key.to_pem)
       @applogic_public_key ||= Base64.urlsafe_encode64(@applogic_key.public_key.to_pem)
 
+      @config['app']['docker_volumes_path'].gsub!(/__USER__/, ENV['USER'])
+
       Dir.glob("#{TEMPLATE_PATH}/**/*.erb", File::FNM_DOTMATCH).each do |file|
         output_file = template_name(file)
         FileUtils.chmod 0o644, output_file if File.exist?(output_file)

@@ -2,9 +2,9 @@ app:
   name: "OpenDAX (sample)"
   domain: "app.local"
   subdomain: "www"
-  adminPass: "xxxx"
-  testUserPass: "xxxx"
-  docker_volumes_path: "/home/user/docker_volumes"
+  adminPass: "0lDHd9ufs9t@"
+  testUserPass: "Am8icnzEI3d!"
+  docker_volumes_path: "/home/__USER__/docker_volumes" # __USER__ will be replaced properly
 render_protect: false
 cloudflare:
   zone_id: none

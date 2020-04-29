@@ -33,19 +33,19 @@ services:
       # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
 
-  litecoind:
-    image: quay.io/openware/litecoind:0.16.3
-    restart: always
-    volumes:
-      - litecoind_data:/litecoin
-      - ../config/litecoin.conf:/litecoin/litecoin.conf
+#  litecoind:
+#    image: quay.io/openware/litecoind:0.16.3
+#    restart: always
+#    volumes:
+#      - litecoind_data:/litecoin
+#      - ../config/litecoin.conf:/litecoin/litecoin.conf
 
-  ardor:
-    image: quay.io/openware/ardor:2.2.3
-    restart: always
-    volumes:
-      - ardor_data:/ardor/db/
-      - ../config/ardor.conf:/ardor/conf/nxt.properties
+#  ardor:
+#    image: quay.io/openware/ardor:2.2.3
+#    restart: always
+#    volumes:
+#      - ardor_data:/ardor/db/
+#      - ../config/ardor.conf:/ardor/conf/nxt.properties
 
 volumes:
   # IMPORTANT: Parity datadir owner must be UID:GID = 1000:1000
@@ -60,13 +60,13 @@ volumes:
       type: none
       device: "<%= @config['app']['docker_volumes_path'] %>/bitcoind_data"
       o: bind
-  litecoind_data:
-    driver_opts:
-      type: none
-      device: "<%= @config['app']['docker_volumes_path'] %>/litecoind_data"
-      o: bind
-  ardor_data:
-    driver_opts:
-      type: none
-      device: "<%= @config['app']['docker_volumes_path'] %>/ardor_data"
-      o: bind
+#  litecoind_data:
+#    driver_opts:
+#      type: none
+#      device: "<%= @config['app']['docker_volumes_path'] %>/litecoind_data"
+#      o: bind
+#  ardor_data:
+#    driver_opts:
+#      type: none
+#      device: "<%= @config['app']['docker_volumes_path'] %>/ardor_data"
+#      o: bind

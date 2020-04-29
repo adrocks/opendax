@@ -1,16 +1,9 @@
-ssh_user = "deploy"
-ssh_public_key = "../../config/secrets/app.key.pub"
-ssh_private_key = "../../config/secrets/app.key"
-
+ssh_public_key = "<%= @deploy['common']['ssh_key_pub'] %>"
+ssh_private_key = "<%= @deploy['common']['ssh_key'] %>"
 hcloud_token = "<%= @deploy['hcloud']['token'] %>"
 hcloud_ssh_fingerprint = "<%= @deploy['hcloud']['ssh_fingerprint'] %>"
-
 cloudflare_token = "<%= @deploy['cloudflare']['token'] %>"
 cloudflare_zone_id = "<%= @config['cloudflare']['zone_id'] %>"
-
-region = "<%= @config['terraform']['region'] %>"
-zone = "<%= @config['terraform']['zone'] %>"
-instance_name = "<%= @config['terraform']['instance_name'] %>"
-machine_type = "<%= @config['terraform']['machine_type'] %>"
-image = "<%= @config['terraform']['image'] %>"
-network = "<%= @config['terraform']['network'] %>"
+region = "<%= @deploy['hcloud']['region'] %>"
+zone = "<%= @deploy['hcloud']['zone'] %>"
+image = "<%= @deploy['hcloud']['image'] %>"

@@ -8,7 +8,7 @@
 # and bundle exec rake render:select[local]
 ################################################################################
 app:
-  name: "OpenDAX (sample)"
+  name: "OpenDAX" # DO NOT CHANGE LATER, because used in docker-volume names
   domain: "app.local"
   subdomain: "www"
   adminPass: "0lDHd9ufs9t@"

@@ -142,6 +142,7 @@ namespace :service do
     def start
       puts '----- Starting cryptonodes -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/parity_data"
+      sh "sudo chown 1000:1000 #{@config['app']['docker_volumes_path']}/parity_data"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/bitcoind_data"
       sh 'docker-compose up -d parity bitcoind'
     end

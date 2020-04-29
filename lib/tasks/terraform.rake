@@ -5,6 +5,7 @@ namespace :terraform do
   using Module.new {
     refine(top_level.singleton_class) do
       def linked_app
+        ENV['GOOGLE_CREDENTIALS'] = @deploy['gcp']['credentials']
         Dir.chdir('config') do
           link_to = File.readlink('app.yml')
           app = File.basename(link_to).split('.')[0]
@@ -29,36 +30,66 @@ namespace :terraform do
 
   desc 'Initialize the Terraform configuration'
   task :init do
-    next unless linked_app
-    puts "terraform:init: #{linked_app}"
-    Dir.chdir("terraform/#{linked_app}") { sh 'terraform init' }
-    show_afterwards
+    app = linked_app
+    next unless app
+    puts "terraform:init: #{app}"
+    Dir.chdir("terraform/#{app}") {
+      bucket = @deploy['gcp']['terraform_bucket']
+      prefix = "#{app}"
+      cmd = "terraform init -backend-config='bucket=#{bucket}' -backend-config='prefix=#{prefix}'"
+      sh cmd do |ok, status|
+      end
+    }
   end
 
   desc 'Apply the Terraform configuration'
   task :apply do
-    next unless linked_app
-    puts "terraform:apply: #{linked_app}"
+    app = linked_app
+    next unless app
+    puts "terraform:apply: #{app}"
     Rake::Task["render:config"].invoke
-    Dir.chdir("terraform/#{linked_app}") { sh 'terraform apply' }
+    Dir.chdir("terraform/#{app}") {
+      sh 'terraform apply' do |ok, status|
+      end
+    }
     show_afterwards
   end
 
   desc 'Plan the Terraform configuration'
   task :plan do
-    next unless linked_app
-    puts "terraform:plan: #{linked_app}"
+    app = linked_app
+    next unless app
+    puts "terraform:plan: #{app}"
     Rake::Task["render:config"].invoke
-    Dir.chdir("terraform/#{linked_app}") { sh 'terraform plan' }
+    Dir.chdir("terraform/#{app}") {
+      sh 'terraform plan' do |ok, status|
+      end
+    }
     show_afterwards
   end
 
   desc 'Destroy the Terraform infrastructure'
   task :destroy do
-    next unless linked_app
-    puts "terraform:destroy: #{linked_app}"
+    app = linked_app
+    next unless app
+    puts "terraform:destroy: #{app}"
     Rake::Task["render:config"].invoke
-    Dir.chdir("terraform/#{linked_app}") { sh 'terraform destroy' }
+    Dir.chdir("terraform/#{app}") {
+      sh 'terraform destroy' do |ok, status|
+      end
+    }
+    show_afterwards
+  end
+
+  desc 'Show the Terraform infrastructure'
+  task :show do
+    app = linked_app
+    next unless app
+    puts "terraform:show: #{app}"
+    Dir.chdir("terraform/#{app}") {
+      sh 'terraform show' do |ok, status|
+      end
+    }
     show_afterwards
   end
 end

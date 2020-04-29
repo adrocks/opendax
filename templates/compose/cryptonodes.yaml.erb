@@ -18,6 +18,8 @@ services:
       --jsonrpc-apis=all
       --db-compaction=ssd
     volumes:
+      # IMPORTANT: Parity datadir owner must be UID:GID = 1000:1000
+      # See lib/tasks/service.rake
       - parity_data:/home/parity/.local/share/io.parity.ethereum
     ports:
       - "127.0.0.1:8545:8545"
@@ -27,6 +29,8 @@ services:
     restart: always
     volumes:
       - bitcoind_data:/bitcoin
+      # IMPORTANT: Must be chown $USER
+      # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
 
   litecoind:
@@ -44,6 +48,8 @@ services:
       - ../config/ardor.conf:/ardor/conf/nxt.properties
 
 volumes:
+  # IMPORTANT: Parity datadir owner must be UID:GID = 1000:1000
+  # See lib/tasks/service.rake
   parity_data:
     driver_opts:
       type: none

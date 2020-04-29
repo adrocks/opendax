@@ -2,6 +2,10 @@ variable "credentials" {
   type = string
 }
 
+variable "terraform_bucket" {
+  type = string
+}
+
 variable "ssh_public_key" {
   type        = string
 }

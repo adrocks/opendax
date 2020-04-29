@@ -3,11 +3,22 @@
 COMPOSE_VERSION="1.23.2"
 COMPOSE_URL="https://github.com/docker/compose/releases/download/$COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)"
 
+# Needed for elasticsearch
+fix_system() {
+  sudo bash <<EOS
+  echo "vm.max_map_count = 262144" >> /etc/sysctl.conf
+  sysctl -p
+EOS
+}
+
 # Opendax bootstrap script
 install_core() {
   sudo bash <<EOS
+# Wait for seconds to initial image to be updated by GCP infra or other.
+sleep 10
 apt-get update
 apt-get install -y -q git tmux gnupg2 dirmngr dbus htop curl libmariadbclient-dev-compat build-essential
+apt-get install -y -q vim
 EOS
 }
 
@@ -48,18 +59,17 @@ install_ruby() {
 EOS
 }
 
-# Needed for elasticsearch
-fix_system() {
-  sudo bash <<EOS
-  echo "vm.max_map_count = 262144" >> /etc/sysctl.conf
-  sysctl -p
+prepare_docker_volumes() {
+  sudo -u deploy bash <<EOS
+  mkdir -p /home/deploy/docker_volumes
+  chmod a+w /home/deploy/docker_volumes
 EOS
 }
 
 fix_system
-
 install_core
 log_rotation
 install_docker
 activate_gcloud
 install_ruby
+prepare_docker_volumes

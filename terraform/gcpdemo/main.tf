@@ -9,6 +9,14 @@
 
 ################ Common
 
+# Storing tfstate into GCP bucket
+# must be inited by terraform init command args.
+# and you have to create the bucket manually beforehand.
+terraform {
+  backend "gcs" {
+  }
+}
+
 provider "google" {
   version = "~> 3.18"
   credentials = file(var.credentials)
@@ -20,6 +28,12 @@ provider "random" {
 }
 resource "random_id" "opendax" {
   byte_length = 2
+}
+
+################ Output
+
+output "opendax_network_name" {
+  value = "${google_compute_network.opendax.name}"
 }
 
 ################ Peatio

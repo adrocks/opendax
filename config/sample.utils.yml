@@ -1,3 +1,9 @@
+mailserver:
+  domainname: domain.com
+  hostname: mail
+  docker_volumes_path: "/home/deploy/docker_volumes"
+  cloudflare:
+    zone_id: "xxxxxxxxx"
 images:
   applogic: rubykube/applogic:latest
   arke: gcr.io/openware-production/arke:2.3.1

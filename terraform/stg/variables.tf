@@ -2,10 +2,8 @@ variable "credentials" {
   type = string
 }
 
-variable "ssh_user" {
-  type        = string
-  description = "Name of the SSH user to use"
-  default     = "app"
+variable "terraform_bucket" {
+  type = string
 }
 
 variable "ssh_public_key" {
@@ -25,14 +23,6 @@ variable "region" {
 }
 
 variable "zone" {
-  type = string
-}
-
-variable "machine_type" {
-  type = string
-}
-
-variable "instance_name" {
   type = string
 }
 

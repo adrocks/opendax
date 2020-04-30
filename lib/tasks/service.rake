@@ -364,6 +364,41 @@ namespace :service do
     @switch.call(args, method(:start), method(:stop))
   end
 
+  desc '[Optional] Run LogAgent'
+  task :logagent, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the LogAgent -----'
+      sh 'docker-compose up -d logspout_agent'
+    end
+
+    def stop
+      puts '----- Stopping the LogAgent -----'
+      sh 'docker-compose rm -fs logspout_agent'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
+  desc '[Optional] Run LogServer'
+  task :logserver, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the LogServer -----'
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_server_data"
+      sh 'docker-compose up -d logstash_server elasticsearch_server kibana_server'
+    end
+
+    def stop
+      puts '----- Stopping the LogServer -----'
+      sh 'docker-compose rm -fs logstash_server elasticsearch_server kibana_server'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
   desc 'Run the micro app with dependencies (does not run Optional)'
   task :all, [:command] => 'render:config' do |task, args|
     args.with_defaults(:command => 'start')

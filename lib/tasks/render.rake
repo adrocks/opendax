@@ -14,11 +14,12 @@ namespace :render do
           if (app == "sample") then
             puts "You have to prepare config/app.yml.d/local.app.yml"
             puts "And 'bundle exec rake render:select[local]'"
-            return nil
+            return false
           end
-          app
+          return true
           rescue
-            puts "Can't readlink: config/app.yml."
+            #puts "Can't readlink: config/app.yml."
+            return true
         end
       end
     end

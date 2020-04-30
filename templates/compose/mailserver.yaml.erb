@@ -14,7 +14,8 @@ services:
       - maildata:/var/mail
       - mailstate:/var/mail-state
       - maillogs:/var/log/mail
-      - ../config/mailserver/:/tmp/docker-mailserver/
+      - mailconfig:/tmp/docker-mailserver/
+      #- ../config/mailserver/:/tmp/docker-mailserver/
       - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - ENABLE_SPAMASSASSIN=0
@@ -45,4 +46,9 @@ volumes:
     driver_opts:
       type: none
       device: "<%= @config['app']['docker_volumes_path'] %>/maillogs"
+      o: bind
+  mailconfig:
+    driver_opts:
+      type: none
+      device: "<%= @config['app']['docker_volumes_path'] %>/mailconfig"
       o: bind

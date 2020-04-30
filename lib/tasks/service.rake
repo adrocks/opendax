@@ -334,6 +334,7 @@ namespace :service do
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maildata"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailstate"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maillogs"
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailconfig"
       sh 'docker-compose up -d mailserver'
     end
 

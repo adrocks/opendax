@@ -20,7 +20,7 @@ basename=opendax_credentials_and_ymls
 if [ -f ./$basename.tgz.enc ]; then
  cp -f $basename.tgz.enc $basename.tgz.`date "+%Y%m%d_%H%M%S"`.enc
 fi
-tar cvzf $basename.tgz opendax_credentials opendax/config/app.yml.d opendax/config/deploy.yml opendax/config/utils.yml
+tar cvzf $basename.tgz opendax_credentials opendax/config/app.yml.d/*.yml opendax/config/deploy.yml opendax/config/utils.yml
 openssl aes-256-cbc -e -pbkdf2 -in $basename.tgz -out $basename.tgz.enc
 if [ $? -gt 0 ]; then
  rm -f $basename.tgz

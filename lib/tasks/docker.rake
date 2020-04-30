@@ -6,6 +6,7 @@ namespace :docker do
 
     desc 'Clean up all docker volumes'
     task :clean do
-        sh 'docker volume prune -f'
+        puts "Unavailable (See source code)"
+        #sh 'docker volume prune -f'
     end
 end

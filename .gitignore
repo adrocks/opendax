@@ -20,6 +20,7 @@ terraform.tfstate*
 !data/parity/.gitkeep
 
 # add later
+master.key
 /.bundle
 .env
 config/app.yml

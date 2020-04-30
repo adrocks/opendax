@@ -1,11 +1,10 @@
 version: '3.6'
 
 services:
-  mailserver:
+  mailsv:
     image: tvial/docker-mailserver:release-v7.0.0
-    hostname: "<%= @config['mailserver']['hostname'] %>"
-    domainname: "<%= @config['mailserver']['domainname'] %>"
-    container_name: mailserver
+    hostname: "<%= @config['mailsv']['hostname'] %>"
+    domainname: "<%= @config['mailsv']['domainname'] %>"
     ports:
       - "25:25"
       - "143:143"

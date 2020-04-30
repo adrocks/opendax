@@ -9,7 +9,7 @@ source /home/$USER/opendax/bin/install_lib.sh
 # You have to do manual install steps after terraform install.
 # See terraform/README.md
 # 
-install_mailserver() {
+install_mailsv() {
   sudo -u deploy bash <<EOS
   sudo apt-get update
   sudo apt-get install -y -q software-properties-common
@@ -50,5 +50,5 @@ install_ruby
 prepare_docker_volumes
 
 #
-install_mailserver
+install_mailsv
 install_firewall

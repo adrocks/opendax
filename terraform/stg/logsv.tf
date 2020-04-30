@@ -32,10 +32,10 @@ resource "random_id" "opendax" {
 
 ################ Output
 
-################ Logserver
+################ logsv
 
-resource "google_compute_instance" "logserver" {
-  name         = "logserver-${random_id.opendax.hex}"
+resource "google_compute_instance" "logsv" {
+  name         = "logsv-${random_id.opendax.hex}"
   machine_type = "n1-standard-2"
   zone         = var.zone
   allow_stopping_for_update = true
@@ -49,7 +49,7 @@ resource "google_compute_instance" "logserver" {
   network_interface {
     network = google_compute_network.opendax.name
     access_config {
-      nat_ip = google_compute_address.logserver.address
+      nat_ip = google_compute_address.logsv.address
     }
   }
   service_account {
@@ -84,7 +84,7 @@ resource "google_compute_instance" "logserver" {
     }
   }
   provisioner "remote-exec" {
-    script = "../../bin/install_logserver.sh"
+    script = "../../bin/install_logsv.sh"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
@@ -93,7 +93,7 @@ resource "google_compute_instance" "logserver" {
     }
   }
   provisioner "remote-exec" {
-    script = "../../bin/start_logserver.sh"
+    script = "../../bin/start_logsv.sh"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
@@ -103,7 +103,7 @@ resource "google_compute_instance" "logserver" {
   }
 }
 
-resource "google_compute_address" "logserver" {
+resource "google_compute_address" "logsv" {
   name = "opendax-ip-${random_id.opendax.hex}"
 }
 
@@ -134,20 +134,20 @@ provider "cloudflare" {
   api_token  = file(var.cloudflare_token)
 }
 
-################ LogServer
+################ logsv
 
-resource "cloudflare_record" "logserver" {
+resource "cloudflare_record" "logsv" {
   zone_id = var.cloudflare_zone_id
-  name    = "logserver"
-  value   = google_compute_address.logserver.address
+  name    = "logsv"
+  value   = google_compute_address.logsv.address
   type    = "A"
   ttl     = 1
 }
 
-resource "cloudflare_record" "internal-logserver" {
+resource "cloudflare_record" "internal-logsv" {
   zone_id = var.cloudflare_zone_id
-  name    = "logserver.internal"
-  value   = google_compute_instance.logserver.network_interface[0].network_ip
+  name    = "logsv.internal"
+  value   = google_compute_instance.logsv.network_interface[0].network_ip
   type    = "A"
   ttl     = 1
 }

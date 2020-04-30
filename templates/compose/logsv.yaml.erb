@@ -20,18 +20,18 @@ services:
   #elasticsearch_old_index_deletion:
   #  build: ./elasticsearch_old_index_deletion
 
-  logstash_server:
+  logstash_sv:
     image: docker.elastic.co/logstash/logstash:6.8.8
     environment:
       - LOGSPOUT=ignore
       - XPACK_WATCHER_ENABLED=false
       - XPACK_MONITORING_ENABLED=false
     volumes:
-      - ../config/logstash_server.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ../config/logstash_sv.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - 5000:5000
 
-  kibana_server:
+  kibana_sv:
     image: docker.elastic.co/kibana/kibana:6.8.8
     environment:
       - LOGSPOUT=ignore
@@ -39,7 +39,7 @@ services:
     ports:
       - 8080:5601
 
-  elasticsearch_server:
+  elasticsearch_sv:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.8.8
     environment:
       - LOGSPOUT=ignore
@@ -58,11 +58,11 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - es_server_data:/usr/share/elasticsearch/data
+      - es_sv_data:/usr/share/elasticsearch/data
 
 volumes:
-  es_server_data:
+  es_sv_data:
     driver_opts:
       type: none
-      device: "<%= @config['app']['docker_volumes_path'] %>/es_server_data"
+      device: "<%= @config['app']['docker_volumes_path'] %>/es_sv_data"
       o: bind

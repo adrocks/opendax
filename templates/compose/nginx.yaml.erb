@@ -3,7 +3,6 @@ version: '3.6'
 services:
   nginx:
     image: nginx:1.17.10-alpine
-    container_name: nginx
     ports:
       - "<%= @config['nginx']['hostport'] %>:80"
     volumes:

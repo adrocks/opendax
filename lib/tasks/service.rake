@@ -326,7 +326,7 @@ namespace :service do
   end
 
   desc '[Optional] Run Mailserver'
-  task :mailserver, [:command] do |task, args|
+  task :mailsv, [:command] do |task, args|
     args.with_defaults(:command => 'start')
 
     def start
@@ -335,12 +335,12 @@ namespace :service do
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailstate"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maillogs"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailconfig"
-      sh 'docker-compose up -d mailserver'
+      sh 'docker-compose up -d mailsv'
     end
 
     def stop
       puts '----- Stopping the Mailserver -----'
-      sh 'docker-compose rm -fs mailserver'
+      sh 'docker-compose rm -fs mailsv'
     end
 
     @switch.call(args, method(:start), method(:stop))
@@ -382,18 +382,18 @@ namespace :service do
   end
 
   desc '[Optional] Run LogServer'
-  task :logserver, [:command] do |task, args|
+  task :logsv, [:command] do |task, args|
     args.with_defaults(:command => 'start')
 
     def start
       puts '----- Starting the LogServer -----'
-      sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_server_data"
-      sh 'docker-compose up -d logstash_server elasticsearch_server kibana_server'
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_sv_data"
+      sh 'docker-compose up -d logstash_sv elasticsearch_sv kibana_sv'
     end
 
     def stop
       puts '----- Stopping the LogServer -----'
-      sh 'docker-compose rm -fs logstash_server elasticsearch_server kibana_server'
+      sh 'docker-compose rm -fs logstash_sv elasticsearch_sv kibana_sv'
     end
 
     @switch.call(args, method(:start), method(:stop))

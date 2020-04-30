@@ -35,17 +35,17 @@ resource "random_id" "opendax" {
 output "opendax_network_name" {
   value = "${google_compute_network.opendax.name}"
 }
-output "opendax_mailserver_external_ip" {
-  value = "${google_compute_address.mailserver.address}"
+output "opendax_mailsv_external_ip" {
+  value = "${google_compute_address.mailsv.address}"
 }
-output "opendax_mailserver_internal_ip" {
-  value = "${google_compute_instance.mailserver.network_interface[0].network_ip}"
+output "opendax_mailsv_internal_ip" {
+  value = "${google_compute_instance.mailsv.network_interface[0].network_ip}"
 }
 
-################ Mailserver
+################ mailsv
 
-resource "google_compute_instance" "mailserver" {
-  name         = "mailserver-${random_id.opendax.hex}"
+resource "google_compute_instance" "mailsv" {
+  name         = "mailsv-${random_id.opendax.hex}"
   machine_type = "n1-standard-2"
   zone         = var.zone
   allow_stopping_for_update = true
@@ -59,7 +59,7 @@ resource "google_compute_instance" "mailserver" {
   network_interface {
     network = google_compute_network.opendax.name
     access_config {
-      nat_ip = google_compute_address.mailserver.address
+      nat_ip = google_compute_address.mailsv.address
     }
   }
   service_account {
@@ -94,7 +94,7 @@ resource "google_compute_instance" "mailserver" {
     }
   }
   provisioner "remote-exec" {
-    script = "../../bin/install_mailserver.sh"
+    script = "../../bin/install_mailsv.sh"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
@@ -103,7 +103,7 @@ resource "google_compute_instance" "mailserver" {
     }
   }
   provisioner "remote-exec" {
-    script = "../../bin/start_mailserver.sh"
+    script = "../../bin/start_mailsv.sh"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"
@@ -113,7 +113,7 @@ resource "google_compute_instance" "mailserver" {
   }
 }
 
-resource "google_compute_address" "mailserver" {
+resource "google_compute_address" "mailsv" {
   name = "opendax-ip-${random_id.opendax.hex}"
 }
 
@@ -144,20 +144,20 @@ provider "cloudflare" {
   api_token  = file(var.cloudflare_token)
 }
 
-################ Mailserver
+################ mailsv
 
-resource "cloudflare_record" "mailserver" {
+resource "cloudflare_record" "mailsv" {
   zone_id = var.cloudflare_zone_id
-  name    = "mailserver"
-  value   = google_compute_address.mailserver.address
+  name    = "mailsv"
+  value   = google_compute_address.mailsv.address
   type    = "A"
   ttl     = 1
 }
 
-resource "cloudflare_record" "internal-mailserver" {
+resource "cloudflare_record" "internal-mailsv" {
   zone_id = var.cloudflare_zone_id
-  name    = "mailserver.internal"
-  value   = google_compute_instance.mailserver.network_interface[0].network_ip
+  name    = "mailsv.internal"
+  value   = google_compute_instance.mailsv.network_interface[0].network_ip
   type    = "A"
   ttl     = 1
 }

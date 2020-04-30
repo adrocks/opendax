@@ -77,6 +77,24 @@ prepare_docker_volumes() {
 EOS
 }
 
+# Install Let's encrypt(ssl)
+# apt stuff is for Ubuntu 18.04 so, check again for Ubuntu 20.04
+# https://certbot.eff.org/lets-encrypt/ubuntufocal-other
+# 
+# You have to do manual install steps after terraform install.
+# See terraform/README.md
+# 
+install_mailserver() {
+  sudo -u deploy bash <<EOS
+  sudo apt-get update
+  sudo apt-get install -y -q software-properties-common
+  sudo add-apt-repository -y universe
+  sudo add-apt-repository -y ppa:certbot/certbot
+  sudo apt-get update
+  sudo apt-get install -y -q certbot
+EOS
+}
+
 install_firewall() {
   sudo bash <<EOS
   apt install -y -q ufw
@@ -87,6 +105,9 @@ install_firewall() {
   ufw allow 8080/tcp
   ufw allow 1337/tcp
   ufw allow 443/tcp
+  ufw allow 25/tcp
+  ufw allow 587/tcp
+  ufw allow 143/tcp
   yes | ufw enable
   ufw reload
   ufw status verbose
@@ -100,4 +121,5 @@ install_docker
 activate_gcloud
 install_ruby
 prepare_docker_volumes
+install_mailserver
 install_firewall

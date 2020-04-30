@@ -325,6 +325,44 @@ namespace :service do
     @switch.call(args, method(:start), method(:stop))
   end
 
+  desc '[Optional] Run Mailserver'
+  task :mailserver, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the Mailserver -----'
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/maildata"
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailstate"
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/maillogs"
+      sh 'docker-compose up -d mailserver'
+    end
+
+    def stop
+      puts '----- Stopping the Mailserver -----'
+      sh 'docker-compose rm -fs mailserver'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
+  desc '[Optional] Run Nginx'
+  task :nginx, [:command] do |task, args|
+    args.with_defaults(:command => 'start')
+
+    def start
+      puts '----- Starting the Nginx -----'
+      sh "mkdir -p #{@config['app']['docker_volumes_path']}/nginx_data"
+      sh 'docker-compose up -d nginx'
+    end
+
+    def stop
+      puts '----- Stopping the Nginx -----'
+      sh 'docker-compose rm -fs nginx'
+    end
+
+    @switch.call(args, method(:start), method(:stop))
+  end
+
   desc 'Run the micro app with dependencies (does not run Optional)'
   task :all, [:command] => 'render:config' do |task, args|
     args.with_defaults(:command => 'start')

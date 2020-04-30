@@ -1,10 +1,10 @@
-version: '2'
+version: '3.6'
 
 services:
   mailserver:
     image: tvial/docker-mailserver:release-v7.0.0
-    hostname: "<%= @utils['mailserver']['hostname'] %>"
-    domainname: "<%= @utils['mailserver']['domainname'] %>"
+    hostname: "<%= @config['mailserver']['hostname'] %>"
+    domainname: "<%= @config['mailserver']['domainname'] %>"
     container_name: mailserver
     ports:
       - "25:25"
@@ -34,15 +34,15 @@ volumes:
   maildata:
     driver_opts:
       type: none
-      device: "<%= @utils['mailserver']['docker_volumes_path'] %>/maildata"
+      device: "<%= @config['app']['docker_volumes_path'] %>/maildata"
       o: bind
   mailstate:
     driver_opts:
       type: none
-      device: "<%= @utils['mailserver']['docker_volumes_path'] %>/mailstate"
+      device: "<%= @config['app']['docker_volumes_path'] %>/mailstate"
       o: bind
   maillogs:
     driver_opts:
       type: none
-      device: "<%= @utils['mailserver']['docker_volumes_path'] %>/maillogs"
+      device: "<%= @config['app']['docker_volumes_path'] %>/maillogs"
       o: bind

@@ -39,3 +39,7 @@ config/barong/seeds.yml
 /config/app.yml.d/*.yml
 !/config/app.yml.d/sample.app.yml
 .*.tfstate.lock.info
+*.tar.gz
+*.tar.gz.enc
+*.tgz
+*.tgz.enc

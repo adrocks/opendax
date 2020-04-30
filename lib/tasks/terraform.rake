@@ -9,9 +9,9 @@ namespace :terraform do
         Dir.chdir('config') do
           link_to = File.readlink('app.yml')
           app = File.basename(link_to).split('.')[0]
-          if (app != "prd" && app != "stg" &&
+          if (app != "prd" && app != "stg" && app != "base" &&
               app != "gcpdemo") then
-              puts "You have to do 'bundle exec rake render:select[prd|stg|gcpdemo]'"
+              puts "You have to do 'bundle exec rake render:select[prd|stg|gcpdemo|base]'"
               return nil
           end
           app

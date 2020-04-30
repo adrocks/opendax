@@ -37,16 +37,16 @@ namespace :render do
     renderer.render
   end
 
-  desc 'Select app.yml for render:config [local|prd|stg|gcpdemo]'
+  desc 'Select app.yml for render:config [local|base|prd|stg|gcpdemo]'
   task :select, [:app] do |_, args|
     args.with_defaults(:app => 'local')
     Dir.chdir('config') {
       if (args.app == 'local' || args.app == 'sample' || args.app == 'prd' ||
-        args.app == 'stg' || args.app == 'gcpdemo') then
+        args.app == 'stg' || args.app == 'gcpdemo'|| args.app == 'base') then
         FileUtils.symlink("app.yml.d/#{args.app}.app.yml", "app.yml", {:force => true})
         puts "Selected: #{args.app}"
       else
-        puts "Error: Specify a param: render:select[local|prd|stg|gcpdemo]"
+        puts "Error: Specify a param: render:select[local|base|prd|stg|gcpdemo]"
       end
     }
   end

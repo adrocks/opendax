@@ -113,6 +113,13 @@ pma:
   basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.
 kibana:
   basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.  
+mailserver:
+  domainname: domain.com
+  hostname: mail
+  cloudflare:
+    zone_id: "xxxxxxxxx"
+nginx:
+  hostport: 18080
 #terraform:
 #  credentials: "~/safe/opendax.json"
 #  project: "example-opendax"

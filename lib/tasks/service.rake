@@ -41,9 +41,13 @@ namespace :service do
       puts '----- Starting dependencies -----'
       puts "----- Vault mode: #{@config['vault']['mode']} -----"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/vault_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/vault_data"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/db_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/db_data"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/redis_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/redis_data"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/rabbitmq_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/rabbitmq_data"
       sh 'docker-compose up -d vault db redis rabbitmq'
       sh 'docker-compose run --rm vault secrets enable totp \
               && docker-compose run --rm vault secrets disable secret \
@@ -69,6 +73,7 @@ namespace :service do
     def start
       puts '----- Starting influxdb -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/influx_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/influx_data"
       sh 'docker-compose up -d influxdb'
       sh 'docker-compose exec influxdb bash -c "cat influxdb.sql | influx"'
     end
@@ -142,8 +147,10 @@ namespace :service do
     def start
       puts '----- Starting cryptonodes -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/parity_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/parity_data"
       sh "sudo chown 1000:1000 #{@config['app']['docker_volumes_path']}/parity_data"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/bitcoind_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/bitcoind_data"
       sh 'docker-compose up -d parity bitcoind'
     end
 
@@ -259,6 +266,7 @@ namespace :service do
 
     def start
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/superset_db"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/superset_db"
       conf = @utils['superset']
       init_params = [
         '--app', 'superset',
@@ -314,6 +322,7 @@ namespace :service do
     def start
       puts '----- Starting the Logging -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/es_data"
       sh 'docker-compose up -d logspout logstash kibana elasticsearch'
     end
 
@@ -332,9 +341,13 @@ namespace :service do
     def start
       puts '----- Starting the Mailserver -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maildata"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/maildata"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailstate"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/mailstate"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maillogs"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/maillogs"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailconfig"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/mailconfig"
       sh 'docker-compose up -d mailsv'
     end
 
@@ -353,6 +366,7 @@ namespace :service do
     def start
       puts '----- Starting the Nginx -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/nginx_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/nginx_data"
       sh 'docker-compose up -d nginx'
     end
 
@@ -388,6 +402,7 @@ namespace :service do
     def start
       puts '----- Starting the LogServer -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_sv_data"
+      sh "chmod a+w #{@config['app']['docker_volumes_path']}/es_sv_data"
       sh 'docker-compose up -d logstash_sv elasticsearch_sv kibana_sv'
     end
 

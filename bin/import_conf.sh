@@ -10,7 +10,7 @@ if [ ! -d ./opendax ]; then
  exit
 fi
 
-basename=opendax_credentials_and_ymls
+basename=opendax_conf
 
 if [ ! -f ./$basename.tgz.enc ]; then
  echo "Cannot find $basename.tgz.enc in home dir."

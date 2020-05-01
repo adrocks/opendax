@@ -15,12 +15,15 @@ if [ ! -d ./opendax_credentials ]; then
  exit
 fi
 
-basename=opendax_credentials_and_ymls
+basename=opendax_conf
 
 if [ -f ./$basename.tgz.enc ]; then
  cp -f $basename.tgz.enc $basename.tgz.`date "+%Y%m%d_%H%M%S"`.enc
 fi
-tar cvzf $basename.tgz opendax_credentials opendax/config/app.yml.d/*.yml opendax/config/deploy.yml opendax/config/utils.yml
+tar cvzf $basename.tgz --exclude sample.app.yml \
+  opendax_credentials opendax/config/secrets/*.key* \
+  opendax/config/app.yml.d/*.yml opendax/config/deploy.yml \
+  opendax/config/utils.yml
 openssl aes-256-cbc -e -pbkdf2 -in $basename.tgz -out $basename.tgz.enc
 if [ $? -gt 0 ]; then
  rm -f $basename.tgz

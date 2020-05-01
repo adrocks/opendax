@@ -10,7 +10,7 @@ start_opendax() {
   cd opendax
   bundle install --path vendor/bundle
   bundle exec rake render:config
-  bundle exec rake service:mailsv 
+  bundle exec rake service:mailsv
   sleep 10
   source bin/setup_mailsv.sh email add postmaster@plusqo.com xUbIt8eTTOwkn830qxC1ybK0TxyR7LfJ
   sleep 5

@@ -24,7 +24,6 @@ fix_system
 install_core
 log_rotation
 install_docker
-activate_gcloud
 install_ruby
 prepare_docker_volumes
 

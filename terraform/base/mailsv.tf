@@ -1,10 +1,4 @@
 ################################################################################
-# App: gcpdemo (staging spec.)
-# * Peatio system demonstration on Google Cloud Platform
-# * Staging spec (testnet and valut not used)
-# * https://www.gcpdemo.plusqo.com/
-
-################################################################################
 # Google Cloud Platform
 
 ################ Common
@@ -69,11 +63,19 @@ resource "google_compute_instance" "mailsv" {
   metadata = {
     sshKeys = "deploy:${file(var.ssh_public_key)}"
   }
-  provisioner "local-exec" {
-    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../ /tmp/upload/"
+  provisioner "file" {
+    source      = var.ssh_private_key
+    destination = "/home/deploy/.ssh/id_rsa"
+    connection {
+      host        = self.network_interface[0].access_config[0].nat_ip
+      type        = "ssh"
+      user        = "deploy"
+      private_key = file(var.ssh_private_key)
+    }
   }
   provisioner "remote-exec" {
     inline = [
+      "chmod 600 /home/deploy/.ssh/id_rsa",
       "mkdir -p /home/deploy/opendax",
     ]
     connection {
@@ -83,9 +85,22 @@ resource "google_compute_instance" "mailsv" {
       private_key = file(var.ssh_private_key)
     }
   }
+  provisioner "local-exec" {
+    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../ /tmp/upload/"
+  }
   provisioner "file" {
     source      = "/tmp/upload/"
     destination = "/home/deploy/opendax"
+    connection {
+      host        = self.network_interface[0].access_config[0].nat_ip
+      type        = "ssh"
+      user        = "deploy"
+      private_key = file(var.ssh_private_key)
+    }
+  }
+  provisioner "file" {
+    source      = var.ssh_private_key
+    destination = "/home/deploy/.ssh/id_rsa"
     connection {
       host        = self.network_interface[0].access_config[0].nat_ip
       type        = "ssh"

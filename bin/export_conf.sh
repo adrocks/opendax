@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Notice)
+# This is just a sample,
+# Use bundle exec rake confpack
+
 # Export to homedir in password encoded tgz
 
 # 1) All customized *.yml configs in opendax

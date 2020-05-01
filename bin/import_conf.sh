@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Notice)
+# This is just a sample,
+# Use bundle exec rake confpack
+
 # Import from tgz.enc password encoded tgz
 # ~/credentials_and_ymls.tgz.enc
 # to ~/opendax

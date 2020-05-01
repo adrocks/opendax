@@ -7,13 +7,13 @@ CONFIG_PATH = 'config/app.yml'.freeze
 UTILS_PATH = 'config/utils.yml'.freeze
 DEPLOY_PATH = 'config/deploy.yml'.freeze
 
-######## START First time after clone ########
+######## START First time after git clone ########
 
 #### Generate master.key
 unless (File.exist?("config/master.key")) then
   puts "Welcome. It seems you are using this repository for the first time."
   puts " Making master.key for the system."
-  print "  Please input master password :"
+  print "  Please input master password (get from admin):"
   input = STDIN.gets.chomp
   sha256 = Digest::SHA256.new
   sha256.update(input)
@@ -27,7 +27,7 @@ else
   # Check master key
   hash =Digest::SHA256.hexdigest(File.read('config/master.key'))
   if (hash != '092f62296f5056e38ee95615df792506ab8a11a3db86a20cc841be0766b71255') then
-    puts "Incorrect config/master.key. Erase it and retry 'bundle exec rake -T'"
+    puts "Incorrect config/master.key. Erase it and retry by 'bundle exec rake -T'"
     exit
   end
 end
@@ -62,7 +62,7 @@ Dir.chdir('config') do
   end
 end
 
-######## END First time after clone ########
+######## END First time after git clone ########
 
 # Special macro
 @config = YAML.load_file(CONFIG_PATH)

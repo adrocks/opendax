@@ -17,6 +17,3 @@ gem 'puma'
 gem 'rspec'
 gem 'jwt'
 gem 'faraday'
-
-# added
-gem 'google-cloud-storage'

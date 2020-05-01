@@ -12,24 +12,18 @@ DEPLOY_PATH = 'config/deploy.yml'.freeze
 #### Generate master.key
 unless (File.exist?("config/master.key")) then
   puts "Welcome. It seems you are using this repository for the first time."
-  puts " Making master.key for the system."
-  print "  Please input master password (get from admin):"
+  puts " Making master.key for the system (only once)."
+  print "  Please input master password :"
   input = STDIN.gets.chomp
   sha256 = Digest::SHA256.new
   sha256.update(input)
   File.write('config/master.key', sha256.hexdigest)
-  puts "[Important] First time notice)"
-  puts "Now you also have to execute 'gcloud auth login',"
-  puts "and get a proper GCP credential for the system."
-  print "[OK: Enter]"
-  STDIN.gets
-else
-  # Check master key
-  hash =Digest::SHA256.hexdigest(File.read('config/master.key'))
-  if (hash != '092f62296f5056e38ee95615df792506ab8a11a3db86a20cc841be0766b71255') then
-    puts "Incorrect config/master.key. Erase it and retry by 'bundle exec rake -T'"
-    exit
-  end
+end
+# Check master key
+hash =Digest::SHA256.hexdigest(File.read('config/master.key'))
+if (hash != '092f62296f5056e38ee95615df792506ab8a11a3db86a20cc841be0766b71255') then
+  puts "Incorrect config/master.key. Erase it and retry by 'bundle exec rake -T'"
+  exit
 end
 
 #### Prepare sample yml.

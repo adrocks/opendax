@@ -44,3 +44,4 @@ config/barong/seeds.yml
 *.tar.gz.enc
 *.tgz
 *.tgz.enc
+confpack.json

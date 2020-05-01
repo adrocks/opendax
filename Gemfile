@@ -17,3 +17,6 @@ gem 'puma'
 gem 'rspec'
 gem 'jwt'
 gem 'faraday'
+
+# add
+gem 'fog-google'

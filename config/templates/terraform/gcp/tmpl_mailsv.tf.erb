@@ -12,7 +12,7 @@ output "opendax_mailsv_internal_ip" {
 ######## Instance
 
 resource "google_compute_instance" "mailsv" {
-  name         = "mailsv-${random_id.opendax.hex}"
+  name         = "mailsv"
   machine_type = "n1-standard-1"
   zone         = var.zone
   allow_stopping_for_update = true
@@ -104,7 +104,7 @@ resource "google_compute_instance" "mailsv" {
 ######## IP
 
 resource "google_compute_address" "mailsv" {
-  name = "opendax-ip-${random_id.opendax.hex}"
+  name = "mailsv-ip"
 }
 
 ######## Cloudflare

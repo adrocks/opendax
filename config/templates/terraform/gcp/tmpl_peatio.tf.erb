@@ -12,7 +12,7 @@ output "opendax_peatio_internal_ip" {
 ######## Instance
 
 resource "google_compute_instance" "peatio" {
-  name         = "peatio-${random_id.opendax.hex}"
+  name         = "peatio"
   machine_type = "n1-standard-2"
   zone         = var.zone
   allow_stopping_for_update = true
@@ -100,10 +100,10 @@ resource "google_compute_instance" "peatio" {
 ######## IP & Disks
 
 resource "google_compute_address" "peatio" {
-  name = "opendax-ip-${random_id.opendax.hex}"
+  name = "peatio-ip"
 }
 resource "google_compute_disk" "peatio" {
-  name = "peatio-docker-volumes-${random_id.opendax.hex}"
+  name = "peatio-docker-volumes"
   type  = "pd-ssd"
   zone  = var.zone
   size  = 60

@@ -29,22 +29,16 @@ output "opendax_network_name" {
 
 ################ Common resources
 
-#### Random id
-
-resource "random_id" "opendax" {
-  byte_length = 2
-}
-
 #### Network
 
 resource "google_compute_network" "opendax" {
-  name = "opendax-network-${random_id.opendax.hex}"
+  name = "opendax-network"
 }
 
 #### Firewall
 
 resource "google_compute_firewall" "opendax" {
-  name    = "opendax-firewall-${random_id.opendax.hex}"
+  name    = "opendax-firewall"
   network = google_compute_network.opendax.name
   allow {
     protocol = "tcp"

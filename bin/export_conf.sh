@@ -7,7 +7,8 @@
 # Export to homedir in password encoded tgz
 
 # 1) All customized *.yml configs in opendax
-# 2) ../opendax_credentials/*
+# 2) All secret keys in opendax
+# 3) ../opendax_credentials/* (for deploy)
 
 cd ~
 if [ ! -d ./opendax ]; then

@@ -43,11 +43,12 @@ namespace :render do
     args.with_defaults(:app => 'local')
     Dir.chdir('config') {
       if (args.app == 'local' || args.app == 'sample' || args.app == 'prd' ||
-        args.app == 'stg' || args.app == 'gcpdemo'|| args.app == 'base') then
+        args.app == 'stg1' || args.app == 'stg2' || args.app == 'stg3' ||
+        args.app == 'base') then
         FileUtils.symlink("app.yml.d/#{args.app}.app.yml", "app.yml", {:force => true})
         puts "Selected: #{args.app}"
       else
-        puts "Error: Specify a param: render:select[local|base|prd|stg|gcpdemo]"
+        puts "Error: Specify a param: render:select[local|base|prd|stg1-3]"
       end
     }
   end

@@ -15,3 +15,9 @@ variable "zone" {
 variable "image" {
   default =  "<%= @deploy['gcp']['image'] %>"
 }
+variable "mailsv_machine_type" {
+  default =  "<%= @deploy['gcp']['mailsv_machine_type'] %>"
+}
+variable "mailsv_disk_size" {
+  default =  "<%= @deploy['gcp']['mailsv_disk_size'] %>"
+}

@@ -7,6 +7,7 @@
 # You have to copy this to local.app.yml and edit for yourself.
 # and bundle exec rake render:select[local]
 ################################################################################
+mode: "sample"
 app:
   name: "OpenDAX" # DO NOT CHANGE LATER, because used in docker-volume names
   domain: "app.local"

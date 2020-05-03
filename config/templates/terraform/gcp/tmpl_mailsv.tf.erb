@@ -13,14 +13,14 @@ output "opendax_mailsv_internal_ip" {
 
 resource "google_compute_instance" "mailsv" {
   name         = "mailsv"
-  machine_type = "n1-standard-1"
+  machine_type = var.mailsv_machine_type
   zone         = var.zone
   allow_stopping_for_update = true
   boot_disk {
     initialize_params {
       image = var.image
       type  = "pd-ssd"
-      size  = 30
+      size  = var.mailsv_disk_size
     }
   }
   network_interface {

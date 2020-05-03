@@ -5,13 +5,12 @@ namespace :terraform do
   using Module.new {
     refine(top_level.singleton_class) do
       def linked_app
-        ENV['GOOGLE_CREDENTIALS'] = @deploy['gcp']['credentials']
         Dir.chdir('config') do
           link_to = File.readlink('app.yml')
           app = File.basename(link_to).split('.')[0]
-          if (app != "prd" && app != "stg" && app != "base" &&
-              app != "gcpdemo") then
-              puts "You have to do 'bundle exec rake render:select[prd|stg|gcpdemo|base]'"
+          if (app != "prd" && app != "stg1" && app != "stg2" &&
+              app != "stg3" && app != "base" ) then
+              puts "You have to do 'bundle exec rake render:select[prd|stg1-3|base]'"
               return nil
           end
           app
@@ -31,9 +30,7 @@ namespace :terraform do
     next unless app
     puts "terraform:init: #{app}"
     Dir.chdir("terraform/#{app}") {
-      bucket = @deploy['gcp']['terraform_bucket']
-      prefix = "#{app}"
-      cmd = "terraform init -backend-config='bucket=#{bucket}' -backend-config='prefix=#{prefix}'"
+      cmd = "terraform init"
       sh cmd do |ok, status|
       end
     }

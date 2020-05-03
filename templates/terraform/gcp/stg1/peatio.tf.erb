@@ -1,4 +1,3 @@
-<% @env_mode = "stg1" %>
 <%= ERB.new(File.read(
     'config/templates/terraform/gcp/tmpl_peatio.tf.erb'
       ), trim_mode: '-').result(binding) %>

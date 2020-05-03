@@ -123,4 +123,14 @@ nginx:
 logagent:
   syslog_host: monitor.internal.domain.com
   retry_count: 10
-
+gcp:
+  peatio_machine_type: n1-standard-2
+  peatio_disk_size: 30
+  logsv_machine_type: n1-standard-2
+  logsv_disk_size: 30
+  cryptosv_machine_type: n1-standard-2
+  cryptosv_disk_size: 30
+hc:
+  peatio_machine_type: cx31
+  logsv_machine_type: cx31
+  cryptosv_machine_type: cx31

@@ -1,19 +1,24 @@
 common:
-  ssh_key: "../../../opendax_credentials/ssh_key.txt"
-  ssh_key_pub: "../../../opendax_credentials/ssh_key.pub.txt"
-gcp:
+  ssh_key: "../../../../opendax_credentials/ssh_key.txt"
+  ssh_key_pub: "../../../../opendax_credentials/ssh_key.pub.txt"
+gcs:
   terraform_bucket: "global-unique-key-opendax-terraform"
-  credentials: "../../../opendax_credentials/gcp.json"
+  credentials: "../../../../opendax_credentials/gcp.json"
+gcp:
+  credentials: "../../../../opendax_credentials/gcp.json"
   project: "opendax"
   region: "asia-northeast1"
   zone: "asia-northeast1-a"
-  image: "debian-cloud/debian-10"
+  image: "ubuntu-os-cloud/ubuntu-minimal-1804-lts"
+  mailsv_machine_type: n1-standard-1
+  mailsv_disk_size: 30
 hcloud:
-  token: "../../../opendax_credentials/hcloud_token.txt"
-  ssh_fingerprint: "../../../opendax_credentials/hcloud_ssh_fingerprint.txt"
+  token: "../../../../opendax_credentials/hcloud_token.txt"
+  ssh_fingerprint: "../../../../opendax_credentials/hcloud_ssh_fingerprint.txt"
   region: "fsn1"
   zone: "fsn1-dc1"
-  image: "debian-10"
+  image: "ubuntu-18.04-minimal-lts"
   network: "10.0.1.0/24"
+  mailsv_machine_type: cx31
 cloudflare:
-  token: "../../../opendax_credentials/cloudflare_token.txt"
+  token: "../../../../opendax_credentials/cloudflare_token.txt"

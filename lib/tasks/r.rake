@@ -1,5 +1,6 @@
 
 require_relative '../opendax/renderer'
+require_relative '../opendax/util'
 
 namespace :r do
 
@@ -22,6 +23,10 @@ namespace :r do
   desc '(R)ender:(c)onfig with [local|base|prd|stg1-3]'
   task :c, [:app] do |_, args|
     if (!args.app.nil?) then
+      if (!check_app(args.app)) then
+        Opendax::Util::show_command_status
+        next
+      end
       conf = JSON.parse(File.read('./config/render.json'))
       conf['app'] = args.app
       File.write('./config/render.json', conf.to_json)

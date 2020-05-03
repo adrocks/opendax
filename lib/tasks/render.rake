@@ -1,5 +1,6 @@
 
 require_relative '../opendax/renderer'
+require_relative '../opendax/util'
 
 namespace :render do
 
@@ -13,8 +14,7 @@ namespace :render do
     renderer = Opendax::Renderer.new
     renderer.render_keys
     renderer.render
-    conf = JSON.parse(File.read('./config/render.json'))
-    puts "Render target app: #{conf['app']}"
+    Opendax::Util::show_command_status
   end
 
 end

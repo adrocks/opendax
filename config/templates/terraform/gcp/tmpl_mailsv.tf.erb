@@ -30,75 +30,44 @@ resource "google_compute_instance" "mailsv" {
     }
   }
   service_account {
-    scopes = ["storage-ro"]
+    scopes = ["cloud-platform"] # full access
   }
   tags = ["allow-webhook"]
   metadata = {
-    sshKeys = "deploy:${file(var.ssh_public_key)}"
+    sshKeys = "deploy:${file(var.ssh_public_key)}\nroot:${file(var.ssh_public_key)}"
   }
-  provisioner "file" {
-    source      = var.ssh_private_key
-    destination = "/home/deploy/.ssh/id_rsa"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "chmod 600 /home/deploy/.ssh/id_rsa",
-      "mkdir -p /home/deploy/opendax",
-    ]
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "local-exec" {
-    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"
-  }
-  provisioner "file" {
-    source      = "/tmp/upload/"
-    destination = "/home/deploy/opendax"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "file" {
-    source      = var.ssh_private_key
-    destination = "/home/deploy/.ssh/id_rsa"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "remote-exec" {
-    script = "../../../bin/install_mailsv.sh"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "remote-exec" {
-    script = "../../../bin/start_mailsv.sh"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
+  # only root user can execute this.(sudo does not work.)
+  <%= RendererHelperGcp::provisioner_remote_exec(
+    'root', 
+    'inline = ['+
+      "\"hostname mailsv-gcp\", "+
+      "\"cp -f /etc/hostname /etc/hostname.bak\", "+
+      "\"echo 'mailsv-gcp' > /etc/hostname\""+
+    ']'
+  ) %>
+  <%= RendererHelperGcp::provisioner_file(
+    'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'
+  ) %>
+  <%= RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 
+    'inline = ['+
+      '"chmod 600 /home/deploy/.ssh/id_rsa", '+
+      '"mkdir -p /home/deploy/opendax"'+
+    ']'
+  ) %>
+  <% RendererHelperGcp::provisioner_local_exec(
+    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
+  ) %>
+  <% RendererHelperGcp::provisioner_file(
+    'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
+  ) %>
+  <% RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/install_mailsv.sh"'
+  ) %>
+  <% RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/start_mailsv.sh"'
+  ) %>
+
 }
 
 ######## IP
@@ -111,22 +80,16 @@ resource "google_compute_address" "mailsv" {
 
 #### Internal
 
-resource "cloudflare_record" "internal-mailsv" {
-  zone_id = var.cloudflare_zone_id
-  name    = "mail.internal.gcp"
-  value   = google_compute_instance.mailsv.network_interface[0].network_ip
-  type    = "A"
-  ttl     = 1
-}
+<%= RendererHelper::cloudflare_internal(
+    "mailsv-internal-gcp",
+    "mailsv.internal.gcp",
+    "mailsv") %>
 
 #### External
 
-resource "cloudflare_record" "mailsv" {
-  zone_id = var.cloudflare_zone_id
-  name    = "mail.gcp"
-  value   = google_compute_address.mailsv.address
-  type    = "A"
-  ttl     = 1
-}
+<%= RendererHelper::cloudflare_external(
+    "mailsv-gcp",
+    "mailsv.gcp",
+    "mailsv") %>
 
 ################################################################################

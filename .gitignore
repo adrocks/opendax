@@ -45,6 +45,5 @@ config/barong/seeds.yml
 *.tgz
 *.tgz.enc
 confpack.json
-inputs.hcl
 *.tf
-
+*opendax_credentials*

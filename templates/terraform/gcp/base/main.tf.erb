@@ -1,4 +1,4 @@
-<% @env_mode = "stg1" %>
+<% @env_mode = "base" %>
 <%= ERB.new(File.read(
     'config/templates/terraform/gcp/tmpl_main.tf.erb'
       ), trim_mode: '-').result(binding) %>

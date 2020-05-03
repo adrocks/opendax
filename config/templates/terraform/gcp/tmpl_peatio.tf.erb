@@ -1,18 +1,29 @@
 ################ Peatio
 
+######## Remote state
+
+data "terraform_remote_state" "network" {
+  backend = "gcs"
+  config = {
+    credentials = "<%= @deploy['gcs']['credentials'] %>"
+    bucket  = "<%= @deploy['gcs']['terraform_bucket'] %>"
+    prefix = "gcp/base"
+  }
+}
+
 ######## Output
 
-output "opendax_peatio_external_ip" {
-  value = "${google_compute_address.peatio.address}"
+output "opendax_peatio_external_ip_<%= @env_mode %>" {
+  value = google_compute_address.peatio-<%= @env_mode %>.address
 }
-output "opendax_peatio_internal_ip" {
-  value = "${google_compute_instance.peatio.network_interface[0].network_ip}"
+output "opendax_peatio_internal_ip_<%= @env_mode %>" {
+  value = google_compute_instance.peatio-<%= @env_mode %>.network_interface[0].network_ip
 }
 
 ######## Instance
 
-resource "google_compute_instance" "peatio" {
-  name         = "peatio"
+resource "google_compute_instance" "peatio-<%= @env_mode %>" {
+  name         = "peatio-<%= @env_mode %>"
   machine_type = "n1-standard-2"
   zone         = var.zone
   allow_stopping_for_update = true
@@ -27,152 +38,112 @@ resource "google_compute_instance" "peatio" {
     }
   }
   network_interface {
-    network = google_compute_network.opendax.name
+    network = data.terraform_remote_state.network.outputs.opendax_network.id
     access_config {
-      nat_ip = google_compute_address.peatio.address
+      nat_ip = google_compute_address.peatio-<%= @env_mode %>.address
     }
   }
   service_account {
-    scopes = ["storage-ro"]
+    scopes = ["cloud-platform"] # full access
   }
   tags = ["allow-webhook"]
   metadata = {
-    sshKeys = "deploy:${file(var.ssh_public_key)}"
+    sshKeys = "deploy:${file(var.ssh_public_key)}\nroot:${file(var.ssh_public_key)}"
   }
-  # Cannot execute for deploy user.(sudo does not work.)
-  #provisioner "remote-exec" {
-  #  inline = [
-  #    "sudo hostname peatio-gcp",
-  #    "sudo cp -f /etc/hostname /etc/hostname.bak",
-  #    "sudo echo 'peatio-gcp' > /etc/hostname",
-  #  ]
-  #  connection {
-  #    host        = self.network_interface[0].access_config[0].nat_ip
-  #    type        = "ssh"
-  #    user        = "deploy"
-  #    private_key = file(var.ssh_private_key)
-  #  }
-  #}
-  provisioner "local-exec" {
-    command = "rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "mkdir -p /home/deploy/opendax",
-    ]
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "file" {
-    source      = "/tmp/upload/"
-    destination = "/home/deploy/opendax"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "remote-exec" {
-    script = "../../../bin/install_peatio.sh"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
-  provisioner "remote-exec" {
-    script = "../../../bin/start_peatio.sh"
-    connection {
-      host        = self.network_interface[0].access_config[0].nat_ip
-      type        = "ssh"
-      user        = "deploy"
-      private_key = file(var.ssh_private_key)
-    }
-  }
+  # only root user can execute this.(sudo does not work.)
+  <%= RendererHelperGcp::provisioner_remote_exec(
+    'root', 
+    'inline = ['+
+      "\"hostname peatio-gcp-#{@env_mode}\", "+
+      "\"cp -f /etc/hostname /etc/hostname.bak\", "+
+      "\"echo 'peatio-gcp-#{@env_mode}' > /etc/hostname\""+
+    ']'
+  ) %>
+  <%= RendererHelperGcp::provisioner_file(
+    'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'
+  ) %>
+  <%= RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 
+    'inline = ['+
+      '"chmod 600 /home/deploy/.ssh/id_rsa", '+
+      '"mkdir -p /home/deploy/opendax"'+
+    ']'
+  ) %>
+  <% RendererHelperGcp::provisioner_local_exec(
+    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
+  ) %>
+  <% RendererHelperGcp::provisioner_file(
+    'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
+  ) %>
+  <% RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/install_peatio.sh"'
+  ) %>
+  <% RendererHelperGcp::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/start_peatio.sh"'
+  ) %>
+ 
 }
 
 ######## IP & Disks
 
-resource "google_compute_address" "peatio" {
-  name = "peatio-ip"
+resource "google_compute_address" "peatio-<%= @env_mode %>" {
+  name = "peatio-ip-<%= @env_mode %>"
 }
-resource "google_compute_disk" "peatio" {
-  name = "peatio-docker-volumes"
-  type  = "pd-ssd"
-  zone  = var.zone
-  size  = 60
-}
-resource "google_compute_attached_disk" "peatio" {
-  disk     = google_compute_disk.peatio.id
-  instance = google_compute_instance.peatio.id
-}
+
+#resource "google_compute_disk" "peatio-<%= @env_mode %>" {
+#  name = "peatio-docker-volumes-<%= @env_mode %>"
+#  type  = "pd-ssd"
+#  zone  = var.zone
+#  size  = 60
+#}
+
+#resource "google_compute_attached_disk" "peatio-<%= @env_mode %>" {
+#  disk     = google_compute_disk.peatio-<%= @env_mode %>.id
+#  instance = google_compute_instance.peatio-<%= @env_mode %>.id
+#}
 
 ######## Cloudflare
 
 #### Internal
 
-resource "cloudflare_record" "internal-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "peatio.internal.gcp"
-  value   = google_compute_instance.peatio.network_interface[0].network_ip
-  type    = "A"
-  ttl     = 1
-}
+<%= RendererHelper::cloudflare_internal(
+    "peatio-#{@env_mode}-internal-gcp",
+    "peatio-#{@env_mode}.internal.gcp",
+    "peatio-#{@env_mode}") %>
 
 #### External
 
-resource "cloudflare_record" "peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "kibana-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "kibana.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "www-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "www.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "pma-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "pma.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "superset-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "superset.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "swagger-barong-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "swagger-barong.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
-resource "cloudflare_record" "swagger-peatio" {
-  zone_id = var.cloudflare_zone_id
-  name    = "swagger.gcp"
-  value   = google_compute_address.peatio.address
-  type    = "A"
-  ttl     = 1
-}
+<%= RendererHelper::cloudflare_external(
+    "peatio-#{@env_mode}-gcp",
+    "peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+
+<%= RendererHelper::cloudflare_external(
+    "kibana-peatio-#{@env_mode}-gcp",
+    "kibana.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+
+<%= RendererHelper::cloudflare_external(
+    "www-peatio-#{@env_mode}-gcp",
+    "www.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+
+<%= RendererHelper::cloudflare_external(
+    "pma-peatio-#{@env_mode}-gcp",
+    "pma.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+
+<%= RendererHelper::cloudflare_external(
+    "superset-peatio-#{@env_mode}-gcp",
+    "superset.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+
+<%= RendererHelper::cloudflare_external(
+    "swagger-barong-peatio-#{@env_mode}-gcp",
+    "swagger-barong.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>
+    
+<%= RendererHelper::cloudflare_external(
+    "swagger-peatio-#{@env_mode}-gcp",
+    "swagger.peatio-#{@env_mode}.gcp",
+    "peatio-#{@env_mode}") %>

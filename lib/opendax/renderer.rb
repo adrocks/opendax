@@ -6,6 +6,10 @@ require 'pathname'
 require 'yaml'
 require 'base64'
 
+require_relative './renderer_helper'
+require_relative './renderer_helper_gcp'
+require_relative './renderer_helper_hc'
+
 module Opendax
   # Renderer is class for rendering Opendax templates.
   class Renderer

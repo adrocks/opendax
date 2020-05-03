@@ -4,7 +4,7 @@ terraform {
   backend "gcs" {
     credentials = "<%= @deploy['gcs']['credentials'] %>"
     bucket  = "<%= @deploy['gcs']['terraform_bucket'] %>"
-    prefix = "hc"
+    prefix = "hc/<%= @env_mode %>"
   }
 }
 provider "hcloud" {
@@ -15,9 +15,9 @@ provider "cloudflare" {
   version = "~> 2.0"
   api_token  = file(var.cloudflare_token)
 }
-provider "random" {
-  version = "~> 2.2"
-}
+#provider "random" {
+#  version = "~> 2.2"
+#}
 
 ################ Output
 
@@ -29,9 +29,9 @@ provider "random" {
 
 #### Random id
 
-resource "random_id" "opendax" {
-  byte_length = 2
-}
+#resource "random_id" "opendax" {
+#  byte_length = 2
+#}
 
 #### Network
 

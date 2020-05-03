@@ -4,7 +4,7 @@ terraform {
   backend "gcs" {
     credentials = "<%= @deploy['gcs']['credentials'] %>"
     bucket  = "<%= @deploy['gcs']['terraform_bucket'] %>"
-    prefix = "gcp"
+    prefix = "gcp/<%= @env_mode %>"
   }
 }
 provider "google" {
@@ -16,34 +16,4 @@ provider "google" {
 provider "cloudflare" {
   version = "~> 2.0"
   api_token  = file(var.cloudflare_token)
-}
-provider "random" {
-  version = "~> 2.2"
-}
-
-################ Output
-
-output "opendax_network_name" {
-  value = "${google_compute_network.opendax.name}"
-}
-
-################ Common resources
-
-#### Network
-
-resource "google_compute_network" "opendax" {
-  name = "opendax-network"
-}
-
-#### Firewall
-
-resource "google_compute_firewall" "opendax" {
-  name    = "opendax-firewall"
-  network = google_compute_network.opendax.name
-  allow {
-    protocol = "tcp"
-    ports    = ["80", "8080", "1337", "443", "22"]
-  }
-  source_ranges = ["0.0.0.0/0"]
-  target_tags = ["allow-webhook"]
 }

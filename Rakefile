@@ -2,6 +2,7 @@ require 'yaml'
 require 'base64'
 require 'erb'
 require "digest"
+require 'json'
 
 CONFIG_PATH = 'config/app.yml'.freeze
 UTILS_PATH = 'config/utils.yml'.freeze
@@ -26,26 +27,14 @@ if (hash != '092f62296f5056e38ee95615df792506ab8a11a3db86a20cc841be0766b71255') 
   exit
 end
 
-#### Prepare sample yml.
-
-# config/app.yml is the important file in the system,
-# but is not contained in git,
-# so, after clone, we have to make symlink to config/app.yml.d/sample.app.yml
-
-Dir.chdir('config') do
-  # Only when local
-  # (when remote, app.yml is not symlink by terraform transfer)
-  if (ENV['USER'] != 'deploy') then
-    File.readlink("app.yml")
-  end
-rescue
-  # config/app.yml symlink not found = seems first time
-  FileUtils.symlink("app.yml.d/sample.app.yml", "app.yml", {:force => true})
-  puts "Rakefile: Using sample.app.yml"
-end
+#### Prepare sample yml/json files.
 
 # first time, copy from sample stuff
 Dir.chdir('config') do
+  unless (File.exist?("render.json")) then
+    FileUtils.copy("sample.render.json", "render.json")
+    puts "Rakefile: Using sample.render.json"
+  end
   unless (File.exist?("deploy.yml")) then
     FileUtils.copy("sample.deploy.yml", "deploy.yml")
     puts "Rakefile: Using sample.deploy.yml"
@@ -58,8 +47,11 @@ end
 
 ######## END First time after git clone ########
 
+conf = JSON.parse(File.read('./config/render.json'))
+@config = YAML.load_file("./config/app.yml.d/#{conf['app']}.app.yml")
+#@config = YAML.load_file(CONFIG_PATH)
+
 # Special macro
-@config = YAML.load_file(CONFIG_PATH)
 @config['app']['docker_volumes_path'].gsub!(/__USER__/, ENV['USER'])
 
 @utils = YAML.load_file(UTILS_PATH)

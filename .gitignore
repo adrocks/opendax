@@ -47,3 +47,4 @@ config/barong/seeds.yml
 confpack.json
 *.tf
 *opendax_credentials*
+/config/render.json

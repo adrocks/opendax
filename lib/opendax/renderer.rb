@@ -74,7 +74,8 @@ module Opendax
     end
 
     def config
-      YAML.load_file('./config/app.yml')
+      conf = JSON.parse(File.read('./config/render.json'))
+      YAML.load_file("./config/app.yml.d/#{conf['app']}.app.yml")
     end
 
     def utils

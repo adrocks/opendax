@@ -25,3 +25,7 @@ hcloud:
   root_password: "passwordXEFVDAVZ"
 cloudflare:
   token: "../../../deploy_secrets/cloudflare_token.txt"
+sakuracloud:
+  token: "../../../deploy_secrets/sakuracloud_token.txt"
+  secret: "../../../deploy_secrets/sakuracloud_secret.txt"
+  zone: "is1b"

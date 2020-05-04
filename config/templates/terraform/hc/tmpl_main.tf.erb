@@ -9,33 +9,65 @@ terraform {
 }
 provider "hcloud" {
   version = "~> 1.16"
-  token = var.hcloud_token
+  token = file(var.hcloud_token)
 }
-provider "cloudflare" {
-  version = "~> 2.0"
-  api_token  = file(var.cloudflare_token)
+
+data "hcloud_ssh_key" "opendax" {
+  fingerprint = file(var.hcloud_ssh_fingerprint)
 }
-#provider "random" {
-#  version = "~> 2.2"
-#}
 
-################ Output
+resource "hcloud_network" "opendax" {
+  name = "opendax"
+  ip_range = var.network
+}
 
-#output "opendax_network_name" {
-#  value = "${google_compute_network.opendax.name}"
-#}
+resource "hcloud_server" "opendax" {
+  name = "mailsv-hc"
+  image = var.image
+  server_type = var.mailsv_machine_type
+  #location = var.region
+  datacenter = var.zone
+  ssh_keys = ["${data.hcloud_ssh_key.opendax.id}"]
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'root', 
+    'inline = ['+
+      "\"adduser --disabled-password --gecos '' deploy\", "+
+      "\"cd /home/deploy\", "+
+      "\"mkdir .ssh\", "+
+      "\"chown deploy:deploy .ssh\", "+
+      "\"chmod 700 .ssh\", "+
+      "\"echo '${file(var.ssh_public_key)}' >> .ssh/authorized_keys\", "+
+      "\"chown deploy:deploy .ssh/authorized_keys\", "+
+      "\"chmod 600 .ssh/authorized_keys\", "+
+      "\"echo 'deploy ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers\", "+
+      "\"hostname mailsv-hc\", "+
+      "\"cp -f /etc/hostname /etc/hostname.bak\", "+
+      "\"echo 'mailsv-hc' > /etc/hostname\", "+
+      "\"echo 'root:#{@deploy['hcloud']['root_password']}' | chpasswd\""+
+    ']'
+  ) %>
+  <%= RendererHelperHc::provisioner_file(
+    'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'
+  ) %>
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'deploy', 
+    'inline = ['+
+      '"chmod 600 /home/deploy/.ssh/id_rsa", '+
+      '"mkdir -p /home/deploy/opendax"'+
+    ']'
+  ) %>
+  <%= RendererHelperHc::provisioner_local_exec(
+    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
+  ) %>
+  <%= RendererHelperHc::provisioner_file(
+    'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
+  ) %>
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/install_mailsv.sh"'
+  ) %>
+  <% RendererHelperHc::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/start_mailsv.sh"'
+  ) %>
 
-################ Common resources
-
-#### Random id
-
-#resource "random_id" "opendax" {
-#  byte_length = 2
-#}
-
-#### Network
-
-#resource "google_compute_network" "opendax" {
-#  name = "opendax-network-${random_id.opendax.hex}"
-#}
+}
 

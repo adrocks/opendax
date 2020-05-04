@@ -21,3 +21,6 @@ variable "network" {
 variable "mailsv_machine_type" {
   default =  "<%= @deploy['hcloud']['mailsv_machine_type'] %>"
 }
+variable "rootpassword" {
+  default =  "<%= @deploy['hcloud']['root_password'] %>"
+}

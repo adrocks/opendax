@@ -20,5 +20,6 @@ hcloud:
   image: "ubuntu-18.04-minimal-lts"
   network: "10.0.1.0/24"
   mailsv_machine_type: cx31
+  root_password: "passwordXEFVDAVZ"
 cloudflare:
   token: "../../../../opendax_credentials/cloudflare_token.txt"

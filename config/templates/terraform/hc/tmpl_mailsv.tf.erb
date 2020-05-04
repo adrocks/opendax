@@ -24,9 +24,9 @@ resource "hcloud_server" "mailsv" {
       "\"hostname mailsv-hc\", "+
       "\"cp -f /etc/hostname /etc/hostname.bak\", "+
       "\"echo 'mailsv-hc' > /etc/hostname\", "+
-      "\"echo 'root:#{@deploy['hcloud']['root_password']}' | chpasswd\""+
-      "\"echo 'set bell-style none' >> ~/.inputrc\""+
-      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
+      "\"echo 'root:#{@deploy['hcloud']['root_password']}' | chpasswd\", "+
+      "\"echo 'set bell-style none' >> ~/.inputrc\", "+
+      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\", "+
       "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""+
     ']'
   ) %>
@@ -37,9 +37,9 @@ resource "hcloud_server" "mailsv" {
     'deploy', 
     'inline = ['+
       '"chmod 600 /home/deploy/.ssh/id_rsa", '+
-      '"mkdir -p /home/deploy/opendax"'+
-      "\"echo 'set bell-style none' >> ~/.inputrc\""+
-      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
+      '"mkdir -p /home/deploy/opendax", '+
+      "\"echo 'set bell-style none' >> ~/.inputrc\", "+
+      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\", "+
       "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""+
     ']'
   ) %>

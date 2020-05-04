@@ -27,7 +27,7 @@ resource "hcloud_server" "mailsv" {
       "\"echo 'root:#{@deploy['hcloud']['root_password']}' | chpasswd\""+
       "\"echo 'set bell-style none' >> ~/.inputrc\""+
       "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
-      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""
+      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""+
     ']'
   ) %>
   <%= RendererHelperHc::provisioner_file(
@@ -40,7 +40,7 @@ resource "hcloud_server" "mailsv" {
       '"mkdir -p /home/deploy/opendax"'+
       "\"echo 'set bell-style none' >> ~/.inputrc\""+
       "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
-      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""
+      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""+
     ']'
   ) %>
   <%= RendererHelperHc::provisioner_local_exec(

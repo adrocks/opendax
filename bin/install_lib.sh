@@ -26,6 +26,7 @@ ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 dpkg-reconfigure --frontend noninteractive tzdata
 apt-get install -y -q git tmux gnupg2 dirmngr dbus htop curl libmariadbclient-dev-compat build-essential
 apt-get install -y -q vim
+update-alternatives --set editor /usr/bin/vim.tiny
 EOS
 }
 

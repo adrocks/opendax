@@ -1,5 +1,7 @@
 module Opendax
 
+  # TODO: move to Gcp
+
   class RendererHelper
 
     def self.cloudflare_internal(resource, dnsname, hostname)

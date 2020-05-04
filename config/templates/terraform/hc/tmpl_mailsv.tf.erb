@@ -1,0 +1,75 @@
+################ Mailsv
+
+######## Instance
+
+resource "hcloud_server" "mailsv" {
+  name = "mailsv-hc"
+  image = var.image
+  server_type = var.mailsv_machine_type
+  #location = var.region
+  datacenter = var.zone
+  ssh_keys = ["${data.hcloud_ssh_key.opendax.id}"]
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'root', 
+    'inline = ['+
+      "\"adduser --disabled-password --gecos '' deploy\", "+
+      "\"cd /home/deploy\", "+
+      "\"mkdir .ssh\", "+
+      "\"chown deploy:deploy .ssh\", "+
+      "\"chmod 700 .ssh\", "+
+      "\"echo '${file(var.ssh_public_key)}' >> .ssh/authorized_keys\", "+
+      "\"chown deploy:deploy .ssh/authorized_keys\", "+
+      "\"chmod 600 .ssh/authorized_keys\", "+
+      "\"echo 'deploy ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers\", "+
+      "\"hostname mailsv-hc\", "+
+      "\"cp -f /etc/hostname /etc/hostname.bak\", "+
+      "\"echo 'mailsv-hc' > /etc/hostname\", "+
+      "\"echo 'root:#{@deploy['hcloud']['root_password']}' | chpasswd\""+
+      "\"echo 'set bell-style none' >> ~/.inputrc\""+
+      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
+      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""
+    ']'
+  ) %>
+  <%= RendererHelperHc::provisioner_file(
+    'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'
+  ) %>
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'deploy', 
+    'inline = ['+
+      '"chmod 600 /home/deploy/.ssh/id_rsa", '+
+      '"mkdir -p /home/deploy/opendax"'+
+      "\"echo 'set bell-style none' >> ~/.inputrc\""+
+      "\"echo 'set visualbell t_vb=' >> ~/.vimrc\""+
+      "\"echo 'force_color_prompt=yes' >> ~/.bashrc\""
+    ']'
+  ) %>
+  <%= RendererHelperHc::provisioner_local_exec(
+    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
+  ) %>
+  <%= RendererHelperHc::provisioner_file(
+    'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
+  ) %>
+  <%= RendererHelperHc::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/install_mailsv.sh"'
+  ) %>
+  <% RendererHelperHc::provisioner_remote_exec(
+    'deploy', 'script = "../../../bin/start_mailsv.sh"'
+  ) %>
+
+}
+
+######## Cloudflare
+
+#### Internal
+
+<%= RendererHelperHc::cloudflare_internal(
+    "mailsv-internal-hc",
+    "mailsv.internal.hc",
+    "mailsv") %>
+
+#### External
+
+<%= RendererHelperHc::cloudflare_external(
+    "mailsv-hc",
+    "mailsv.hc",
+    "mailsv") %>

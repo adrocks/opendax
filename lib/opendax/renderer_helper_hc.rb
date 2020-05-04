@@ -42,6 +42,30 @@ EOS
 EOS
     end
 
+    def self.cloudflare_internal(resource, dnsname, hostname)
+      return <<"EOS"
+resource "cloudflare_record" "#{resource}" {
+  zone_id = var.cloudflare_zone_id
+  name    = "#{dnsname}"
+  value   = "10.0.10.14"
+  type    = "A"
+  ttl     = 1
+}
+EOS
+    end
+
+    def self.cloudflare_external(resource, dnsname, hostname)
+      return <<"EOS"
+resource "cloudflare_record" "#{resource}" {
+  zone_id = var.cloudflare_zone_id
+  name    = "#{dnsname}"
+  value   = hcloud_server.#{hostname}.ipv4_address
+  type    = "A"
+  ttl     = 1
+}
+EOS
+    end
+
   end
 
 end

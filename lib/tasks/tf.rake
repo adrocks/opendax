@@ -8,13 +8,20 @@ namespace :tf do
     refine(top_level.singleton_class) do
       def set_env
         #ENV['GOOGLE_CREDENTIALS'] = @deploy['gcp']['credentials']
+        conf = JSON.parse(File.read('./config/render.json'))
+        if (conf['app']=='sample'||conf['app']=='local') then
+          puts 'Set r:c[prd|base|stg1-3] for terraform.'
+          return false
+        end
+        puts 'ok'
+        true
       end
     end
   } 
 
   desc 'Set (c)loud platform for Terraform [gcp|hc]'
   task :c, [:kind] do |_, args|
-    set_env
+    next if (!set_env)
     conf = JSON.parse(File.read('./config/render.json'))
     if (args.kind.nil? || (args.kind != 'gcp' && args.kind != 'hc')) then
       puts "Specify paramter [gcp|hc]."
@@ -29,7 +36,7 @@ namespace :tf do
 
   desc 'Initialize the Terraform configuration'
   task :init do
-    set_env
+    next if (!set_env)
     Rake::Task["render:config"].invoke
     conf = JSON.parse(File.read('./config/render.json'))
     Dir.chdir("terraform/#{conf['cloud']}/#{conf['app']}") {
@@ -44,7 +51,7 @@ namespace :tf do
 
   desc 'Apply the Terraform configuration'
   task :apply do
-    set_env
+    next if (!set_env)
     Rake::Task["render:config"].invoke
     conf = JSON.parse(File.read('./config/render.json'))
     Dir.chdir("terraform/#{conf['cloud']}/#{conf['app']}") {
@@ -56,7 +63,7 @@ namespace :tf do
 
   desc 'Plan the Terraform configuration'
   task :plan do
-    set_env
+    next if (!set_env)
     Rake::Task["render:config"].invoke
     conf = JSON.parse(File.read('./config/render.json'))
     Dir.chdir("terraform/#{conf['cloud']}/#{conf['app']}") {
@@ -68,7 +75,7 @@ namespace :tf do
 
   desc 'Destroy the Terraform infrastructure'
   task :destroy do
-    set_env
+    next if (!set_env)
     Rake::Task["render:config"].invoke
     conf = JSON.parse(File.read('./config/render.json'))
     Dir.chdir("terraform/#{conf['cloud']}/#{conf['app']}") {
@@ -80,7 +87,7 @@ namespace :tf do
 
   desc 'Show the Terraform infrastructure'
   task :show do
-    set_env
+    next if (!set_env)
     Rake::Task["render:config"].invoke
     conf = JSON.parse(File.read('./config/render.json'))
     Dir.chdir("terraform/#{conf['cloud']}/#{conf['app']}") {

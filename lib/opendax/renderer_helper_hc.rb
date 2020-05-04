@@ -2,6 +2,35 @@ module Opendax
 
   class RendererHelperHc
 
+    def self.root_user_init(root_password)
+      'inline = ['+
+        "\"adduser --disabled-password --gecos '' deploy\", "+
+        "\"cd /home/deploy\", "+
+        "\"mkdir .ssh\", "+
+        "\"chown deploy:deploy .ssh\", "+
+        "\"chmod 700 .ssh\", "+
+        "\"echo '${file(var.ssh_public_key)}' >> .ssh/authorized_keys\", "+
+        "\"chown deploy:deploy .ssh/authorized_keys\", "+
+        "\"chmod 600 .ssh/authorized_keys\", "+
+        "\"echo 'deploy ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers\", "+
+        "\"hostname mailsv-hc\", "+
+        "\"cp -f /etc/hostname /etc/hostname.bak\", "+
+        "\"echo 'mailsv-hc' > /etc/hostname\", "+
+        "\"echo 'root:#{root_password}' | chpasswd\", "+
+        "\"echo 'set bell-style none' >> ~/.inputrc\", "+
+        "\"echo 'set visualbell t_vb=' >> ~/.vimrc\" "+
+      ']'
+    end
+
+    def self.deploy_user_init
+      'inline = ['+
+        '"chmod 600 /home/deploy/.ssh/id_rsa", '+
+        '"mkdir -p /home/deploy/opendax", '+
+        "\"echo 'set bell-style none' >> ~/.inputrc\", "+
+        "\"echo 'set visualbell t_vb=' >> ~/.vimrc\" "+
+      ']'
+    end
+
     def self.connstr(user)
       return <<"EOS"
       connection {

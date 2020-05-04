@@ -17,9 +17,8 @@ hcloud:
   ssh_fingerprint: "../../../../opendax_credentials/hcloud_ssh_fingerprint.txt"
   region: "fsn1"
   zone: "fsn1-dc1"
-  image: "ubuntu-18.04-minimal-lts"
-  network: "10.0.1.0/24"
-  mailsv_machine_type: cx31
+  image: "ubuntu-18.04"
+  mailsv_machine_type: cx11
   root_password: "passwordXEFVDAVZ"
 cloudflare:
   token: "../../../../opendax_credentials/cloudflare_token.txt"

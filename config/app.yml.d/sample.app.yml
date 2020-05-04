@@ -132,6 +132,6 @@ gcp:
   cryptosv_machine_type: n1-standard-2
   cryptosv_disk_size: 30
 hc:
-  peatio_machine_type: cx31
-  logsv_machine_type: cx31
-  cryptosv_machine_type: cx31
+  peatio_machine_type: cx11
+  logsv_machine_type: cx11
+  cryptosv_machine_type: cx11

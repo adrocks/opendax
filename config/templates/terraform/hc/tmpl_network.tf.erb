@@ -1,0 +1,14 @@
+################ Network resources
+
+#### Network
+
+resource "hcloud_network" "opendax-1" {
+  name = "opendax-1"
+  ip_range = "10.0.0.0/8"
+}
+resource "hcloud_network_subnet" "opendax-1" {
+  network_id = hcloud_network.opendax-1.id
+  type = "server"
+  network_zone = "eu-central"
+  ip_range   = "10.0.10.0/24"
+}

@@ -13,7 +13,10 @@ namespace :tf do
           puts 'Set r:c[prd|base|stg1-3] for terraform.'
           return false
         end
-        puts 'ok'
+        if (ENV['USER']=='deploy') then
+          puts 'User deploy cannot deploy.'
+          return false
+        end
         true
       end
     end

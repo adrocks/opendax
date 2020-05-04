@@ -2,8 +2,8 @@ require 'fog/google'
 
 namespace :confpack do
 
-  @basename = 'opendax_confpack'
-  @credentials_basename = "#{@basename}_credentials"
+  @basename = 'confpack'
+  @deploy_secrets_basename = "#{@basename}_deploy_secrets"
   @password = File.read('config/master.key')
   @bucket = {}
 
@@ -80,18 +80,15 @@ namespace :confpack do
     end
   } 
 
-  desc 'Save credentials ~/opendax_credentials into GCP storage bucket.'
-  task :save_credentials do
-    unless (Dir.exist?('../opendax_credentials')) then
-      puts ('Not found ~/opendax_credentials')
-      next
-    end
-    save("#{@credentials_basename}", "opendax_credentials")
+  desc 'Save deploy_secrets/* into GCP storage bucket.'
+  task :save_deploy_secrets do
+    args = "--exclude .gitkeep opendax/deploy_secrets"
+    save("#{@deploy_secrets_basename}", args)
   end
 
-  desc 'Load credentials ~/opendax_credentials from GCP storage bucket.'
-  task :load_credentials do
-    load("#{@credentials_basename}")
+  desc 'Load deploy_secrets/* from GCP storage bucket.'
+  task :load_deploy_secrets do
+    load("#{@deploy_secrets_basename}")
   end
 
   desc 'Save all opendax conf into GCP storage bucket.'
@@ -100,7 +97,8 @@ namespace :confpack do
       "opendax/config/secrets/*.key* "+
       "opendax/config/app.yml.d/*.yml "+
       "opendax/config/deploy.yml "+
-      "opendax/config/utils.yml"
+      "opendax/config/utils.yml "+
+      "opendax/config/render.json"
     save("#{@basename}", args)
   end
 

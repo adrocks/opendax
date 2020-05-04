@@ -20,6 +20,8 @@ terraform.tfstate*
 !data/parity/.gitkeep
 
 # add later
+deploy_secrets/*
+!deploy_secrets/.gitkeep
 master.key
 /.bundle
 .env
@@ -46,5 +48,4 @@ config/barong/seeds.yml
 *.tgz.enc
 confpack.json
 *.tf
-*opendax_credentials*
 /config/render.json

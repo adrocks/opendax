@@ -27,6 +27,8 @@ dpkg-reconfigure --frontend noninteractive tzdata
 apt-get install -y -q git tmux gnupg2 dirmngr dbus htop curl libmariadbclient-dev-compat build-essential
 apt-get install -y -q vim
 update-alternatives --set editor /usr/bin/vim.tiny
+apt-get install -y -q monit
+apt-get install -y -q munin-node
 EOS
 }
 

@@ -147,7 +147,6 @@ namespace :confpack do
       puts "Specify [filename]"
     else
       if (!check_filename(args.file)) then
-        puts ("Filename [-a-zA-Z0-9]")
         next
       end
       load("#{@deploy_secrets_basename}", args.file)

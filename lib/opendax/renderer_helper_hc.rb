@@ -17,6 +17,7 @@ module Opendax
         "\"cp -f /etc/hostname /etc/hostname.bak\", "+
         "\"echo 'mailsv-hc' > /etc/hostname\", "+
         "\"echo 'root:#{root_password}' | chpasswd\", "+
+        "\"echo 'deploy:#{root_password}' | chpasswd\", "+
         "\"echo 'set bell-style none' >> ~/.inputrc\", "+
         "\"echo 'set visualbell t_vb=' >> ~/.vimrc\" "+
       ']'

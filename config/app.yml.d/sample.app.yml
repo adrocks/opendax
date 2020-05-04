@@ -133,5 +133,8 @@ gcp:
   cryptosv_disk_size: 30
 hc:
   peatio_machine_type: cx11
-  logsv_machine_type: cx11
+  peatio_machine_ip: '10.0.10.12'
   cryptosv_machine_type: cx11
+  cryptosv_machine_ip: '10.0.10.13'
+  logsv_machine_type: cx11
+  logsv_machine_ip: '10.0.10.14'

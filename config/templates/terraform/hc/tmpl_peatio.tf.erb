@@ -18,19 +18,27 @@ resource "hcloud_server" "peatio-<%= @config['mode'] %>" {
   <%= RendererHelperHc::provisioner_remote_exec(
     'deploy', RendererHelperHc::deploy_user_init
   ) %>
-  <%= RendererHelperHc::provisioner_local_exec(
+  <% RendererHelperHc::provisioner_local_exec(
     '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
   ) %>
-  <%= RendererHelperHc::provisioner_file(
+  <% RendererHelperHc::provisioner_file(
     'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
   ) %>
-  <%= RendererHelperHc::provisioner_remote_exec(
+  <% RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/install_peatio.sh"'
   ) %>
   <% RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/start_peatio.sh"'
   ) %>
 
+}
+
+######## Network
+
+resource "hcloud_server_network" "peatio-network-<%= @config['mode'] %>" {
+  server_id = hcloud_server.peatio-<%= @config['mode'] %>.id
+  network_id = data.terraform_remote_state.network.outputs.opendax_network.id
+  ip = "<%= @config['hc']['peatio_machine_ip'] %>"
 }
 
 ######## Cloudflare
@@ -40,7 +48,7 @@ resource "hcloud_server" "peatio-<%= @config['mode'] %>" {
 <%= RendererHelperHc::cloudflare_internal(
     "peatio-#{@config['mode']}-internal-hc",
     "peatio-#{@config['mode']}.internal.hc",
-    "peatio-#{@config['mode']}") %>
+    "#{@config['hc']['peatio_machine_ip']}") %>
 
 #### External
 

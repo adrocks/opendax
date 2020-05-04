@@ -71,12 +71,12 @@ EOS
 EOS
     end
 
-    def self.cloudflare_internal(resource, dnsname, hostname)
+    def self.cloudflare_internal(resource, dnsname, ip)
       return <<"EOS"
 resource "cloudflare_record" "#{resource}" {
   zone_id = var.cloudflare_zone_id
   name    = "#{dnsname}"
-  value   = "10.0.10.14"
+  value   = "#{ip}"
   type    = "A"
   ttl     = 1
 }

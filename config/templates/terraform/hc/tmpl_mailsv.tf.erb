@@ -18,19 +18,27 @@ resource "hcloud_server" "mailsv" {
   <%= RendererHelperHc::provisioner_remote_exec(
     'deploy', RendererHelperHc::deploy_user_init
   ) %>
-  <%= RendererHelperHc::provisioner_local_exec(
+  <% RendererHelperHc::provisioner_local_exec(
     '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
   ) %>
-  <%= RendererHelperHc::provisioner_file(
+  <% RendererHelperHc::provisioner_file(
     'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
   ) %>
-  <%= RendererHelperHc::provisioner_remote_exec(
+  <% RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/install_mailsv.sh"'
   ) %>
   <% RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/start_mailsv.sh"'
   ) %>
 
+}
+
+######## Network
+
+resource "hcloud_server_network" "mailsv-network" {
+  server_id = hcloud_server.mailsv.id
+  network_id =  hcloud_network.opendax-1.id
+  ip = "<%= @deploy['hcloud']['mailsv_machine_ip'] %>"
 }
 
 ######## Cloudflare
@@ -40,7 +48,7 @@ resource "hcloud_server" "mailsv" {
 <%= RendererHelperHc::cloudflare_internal(
     "mailsv-internal-hc",
     "mailsv.internal.hc",
-    "mailsv") %>
+    "#{@deploy['hcloud']['mailsv_machine_ip']}") %>
 
 #### External
 

@@ -403,12 +403,12 @@ namespace :service do
       puts '----- Starting the LogServer -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_sv_data"
       sh "sudo chmod a+w #{@config['app']['docker_volumes_path']}/es_sv_data"
-      sh 'docker-compose up -d logstash_sv elasticsearch_sv kibana_sv'
+      sh 'docker-compose up -d logstashsv elasticsearchsv kibanasv'
     end
 
     def stop
       puts '----- Stopping the LogServer -----'
-      sh 'docker-compose rm -fs logstash_sv elasticsearch_sv kibana_sv'
+      sh 'docker-compose rm -fs logstashsv elasticsearchsv kibanasv'
     end
 
     @switch.call(args, method(:start), method(:stop))

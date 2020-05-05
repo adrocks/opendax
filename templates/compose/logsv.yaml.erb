@@ -20,7 +20,7 @@ services:
   #elasticsearch_old_index_deletion:
   #  build: ./elasticsearch_old_index_deletion
 
-  logstash_sv:
+  logstashsv:
     image: docker.elastic.co/logstash/logstash:6.8.8
     environment:
       - LOGSPOUT=ignore
@@ -31,15 +31,15 @@ services:
     ports:
       - 5000:5000
 
-  kibana_sv:
+  kibanasv:
     image: docker.elastic.co/kibana/kibana:6.8.8
     environment:
       - LOGSPOUT=ignore
-      - ELASTICSEARCH_URL=http://elasticsearch_sv:9200
+      - ELASTICSEARCH_URL=http://elasticsearchsv:9200
     ports:
       - 8080:5601
 
-  elasticsearch_sv:
+  elasticsearchsv:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.8.8
     environment:
       - LOGSPOUT=ignore

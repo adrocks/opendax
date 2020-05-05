@@ -2,10 +2,12 @@ namespace :email do
 
   top_level = self
 
+
   desc 'Init mailboxes & aliases on seed yml(WARN: CLEAR&recreate)'
   task :init do
     config_path =File.expand_path('./config/mailsv')
     ENV['CONFIG_PATH']=config_path
+    ENV['IMAGE_NAME']=@config['images']['mailsv']
     sh "rm -f ./config/mailsv/postfix-accounts.cf"
     sh "rm -f ./config/mailsv/postfix-virtual.cf"
     sh "chmod +x bin/setup_mailsv.sh"

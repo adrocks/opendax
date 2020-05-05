@@ -27,6 +27,7 @@ images:
   frontend: yuknak/baseapp:2.3.26 # Check on quay.io/openware/baseapp for latest tags
   tower: quay.io/openware/tower:2.3.137
   postmaster: yuknak/postmaster:2.3.5
+  mailsv: tvial/docker-mailserver:release-v7.0.0
 arke_proxy:
   enabled: false
 vendor:

@@ -127,8 +127,8 @@ mailsv:
 nginx:
   hostport: 18080
 logagent:
-  syslog_host: monitor.internal.domain.com
-  retry_count: 10
+  syslog_host: 10.0.10.14
+  retry_count: 100
 gcp:
   peatio_machine_type: n1-standard-2
   peatio_disk_size: 30

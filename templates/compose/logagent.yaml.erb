@@ -3,8 +3,8 @@ version: '3.6'
 services:
 
   logspout_agent:
-    image: gliderlabs/logspout:v3.2.8
-    command: syslog://<%= @config['logagent']['syslog_host'] %>:5000
+    image: gliderlabs/logspout:v3.2.10
+    command: syslog+tcp://<%= @config['logagent']['syslog_host'] %>:5000
     environment:
       - RETRY_COUNT=<%= @config['logagent']['retry_count'] %>
     volumes:

@@ -22,7 +22,9 @@ services:
       # See lib/tasks/service.rake
       - parity_data:/home/parity/.local/share/io.parity.ethereum
     ports:
-      - "127.0.0.1:8545:8545"
+      #- "127.0.0.1:8545:8545"
+      - "8545:8545"
+      - "30303:30303"
 
   bitcoind:
     image: quay.io/openware/bitcoind:0.17.1
@@ -32,6 +34,8 @@ services:
       # IMPORTANT: Must be chown $USER
       # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
+      - "18332:18332"
+      - "18333:18333"
 
 #  litecoind:
 #    image: quay.io/openware/litecoind:0.16.3

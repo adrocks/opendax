@@ -6,7 +6,8 @@ require_relative 'payload'
 require_relative 'renderer'
 
 class Webhook < Sinatra::Base
-  CONFIG_PATH = 'config/app.yml'.freeze
+  CONFIG_PATH = 'config/app.yml.need_to_be_changed'.freeze
+  #CONFIG_PATH = 'config/app.yml'.freeze
 
   set :show_exceptions, false
 

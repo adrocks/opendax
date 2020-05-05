@@ -4,7 +4,7 @@ require 'erb'
 require "digest"
 require 'json'
 
-CONFIG_PATH = 'config/app.yml'.freeze
+#CONFIG_PATH = 'config/app.yml'.freeze
 UTILS_PATH = 'config/utils.yml'.freeze
 DEPLOY_PATH = 'config/deploy.yml'.freeze
 
@@ -48,8 +48,8 @@ end
 ######## END First time after git clone ########
 
 conf = JSON.parse(File.read('./config/render.json'))
-@config = YAML.load_file("./config/app.yml.d/#{conf['app']}.app.yml")
-#@config = YAML.load_file(CONFIG_PATH)
+CONFIG_PATH = "./config/app.yml.d/#{conf['app']}.app.yml"
+@config = YAML.load_file(CONFIG_PATH)
 
 # Special macro
 @config['app']['docker_volumes_path'].gsub!(/__USER__/, ENV['USER'])

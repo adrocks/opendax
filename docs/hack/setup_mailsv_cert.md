@@ -2,6 +2,8 @@
 
 by yn
 
+**This configuration is important to run the service**
+
 ## Summary
 
 * After terraform, addtional manual installation steps are needed.
@@ -145,14 +147,18 @@ mail._domainkey IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
           "CLcckXYRCZ72//cbOd9zAcf1WApMn5uKe3w3BiqeB3sHnxypIOOEMl9SuVkbjntGYcafZtML8QhvcBDyPANMB/R8q8FLS+DA7GoYcBxf/aXvndy4IJz+9pRPCHiwdC97D2k7AB6QIDAQAB" )  ; ----- DKIM key mail for domain.com
 ```
 
-You put this into dns like this:
+You put this into dns like this (format by yourself):
 
 ```
 txt mail._domainkey v=DKIM1; h=sha256; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIfdafdas4nqua43RaslX3MgwDyJ564Ss/GNWiZl0jFrXrESm7ifpOUsfjDAjzF4/m9Y6SFr/wSWkt6RnYPP02Tu7Xa1WrAvJh1LPYs6e5pOKYTxCAZXdS+ymaFyIBf2ipJ6ZNQwizZfJ3GmrvZJK4jXhfdafdaujmwl17j4ykj/3cm/OjzoXMmLktzj+gCBhqTH4MbaLc/jtjqdZ9eJYcQn8Ji7R9oF1HhlqCZ7OhyVqA+dUc5XyDskeHFJj3580Ww7lJF3aq9XzmPg6EfB0K+hHZ6C0+uverQpjwTcxnIvG530rNPdnT+XhDTgQb/+7fNZgkWpv3wIDAQAB
 ```
 
-Check site (set selector mail)
+
+Check by this (set selector mail):
+
 https://dmarcian.com/dkim-inspector/
+
+**Notice) The record must be valid by this check site.**
 
 ## Setup SPF
 
@@ -167,8 +173,10 @@ txt domain.com
 v=spf1 +ip4:138.21.122.37/32 ~all
 ```
 
-Check:
+Check by this:
 
 https://dmarcian.com/spf-survey/
+
+**Notice) The record must be valid by this check site.**
 
 EOF

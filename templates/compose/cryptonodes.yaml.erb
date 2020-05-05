@@ -34,6 +34,7 @@ services:
       # IMPORTANT: Must be chown $USER
       # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
+    ports:
       - "18332:18332"
       - "18333:18333"
 

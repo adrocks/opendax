@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
+#bundle exec rake service:logsv
 start_opendax() {
   sudo -u deploy bash <<EOS
   cd /home/deploy
@@ -10,7 +11,6 @@ start_opendax() {
   cd opendax
   bundle install --path vendor/bundle
   bundle exec rake render:config
-  bundle exec rake service:logsv
 EOS
 }
 

@@ -1,5 +1,9 @@
 #!/bin/bash -x
 
+#bundle exec rake wallet:create['deposit','http://127.0.0.1:8545','changeme']
+#bundle exec rake wallet:create['hot','http://127.0.0.1:8545','changeme']
+#bundle exec rake wallet:create['warm','http://127.0.0.1:8545','changeme']
+
 start_opendax() {
   sudo -u deploy bash <<EOS
   cd /home/deploy

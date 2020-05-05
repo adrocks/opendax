@@ -1,5 +1,9 @@
 #!/bin/bash -x
 
+#bundle exec rake service:mailsv
+#bundle exec rake email:init
+#bundle exec rake service:mailsv[stop]
+#bundle exec rake service:mailsv
 start_opendax() {
   sudo -u deploy bash <<EOS
   cd /home/deploy
@@ -11,10 +15,6 @@ start_opendax() {
   bundle install --path vendor/bundle
   bundle exec rake render:config
   bundle exec rake service:logagent
-  bundle exec rake service:mailsv
-  bundle exec rake email:init
-  bundle exec rake service:mailsv[stop]
-  bundle exec rake service:mailsv
 EOS
 }
 

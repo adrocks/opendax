@@ -117,8 +117,12 @@ kibana:
 mailsv:
   domainname: domain.com
   hostname: mail
-  cloudflare:
-    zone_id: "xxxxxxxxx"
+  emails:
+    - address: admin@domain.com
+      password: xx
+  aliases:
+    - address: user@domain.com
+      to: "user@another.domain.com"
 nginx:
   hostport: 18080
 logagent:

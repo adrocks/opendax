@@ -2,7 +2,7 @@ module Opendax
 
   class RendererHelperHc
 
-    def self.root_user_init(root_password)
+    def self.root_user_init(hostname)
       'inline = ['+
         "\"adduser --disabled-password --gecos '' deploy\", "+
         "\"cd /home/deploy\", "+
@@ -13,11 +13,11 @@ module Opendax
         "\"chown deploy:deploy .ssh/authorized_keys\", "+
         "\"chmod 600 .ssh/authorized_keys\", "+
         "\"echo 'deploy ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers\", "+
-        "\"hostname mailsv-hc\", "+
+        "\"hostname #{hostname}\", "+
         "\"cp -f /etc/hostname /etc/hostname.bak\", "+
-        "\"echo 'mailsv-hc' > /etc/hostname\", "+
-        "\"echo 'root:#{root_password}' | chpasswd\", "+
-        "\"echo 'deploy:#{root_password}' | chpasswd\", "+
+        "\"echo '#{hostname}' > /etc/hostname\", "+
+        "\"echo 'root:${file(var.host_password)}' | chpasswd\", "+
+        "\"echo 'deploy:${file(var.host_password)}' | chpasswd\", "+
         "\"echo 'set bell-style none' >> ~/.inputrc\", "+
         "\"echo 'set visualbell t_vb=' >> ~/.vimrc\" "+
       ']'

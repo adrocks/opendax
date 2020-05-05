@@ -10,7 +10,7 @@ resource "hcloud_server" "cryptosv-<%= @config['mode'] %>" {
   datacenter = var.zone
   ssh_keys = ["${data.hcloud_ssh_key.opendax.id}"]
   <%= RendererHelperHc::provisioner_remote_exec(
-    'root', RendererHelperHc::root_user_init("#{@deploy['hcloud']['root_password']}")
+    'root', RendererHelperHc::root_user_init("cryptosv-#{@config['mode']}-hc")
   ) %>
   <%= RendererHelperHc::provisioner_file(
     'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'

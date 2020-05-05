@@ -11,17 +11,7 @@ start_opendax() {
   bundle install --path vendor/bundle
   bundle exec rake render:config
   bundle exec rake service:mailsv
-  sleep 10
-  source bin/setup_mailsv.sh email add postmaster@plusqo.com xUbIt8eTTOwkn830qxC1ybK0TxyR7LfJ
-  sleep 5
-  source bin/setup_mailsv.sh email add one@plusqo.com xUbIt8eTTOwkn830qxC1ybK0TxyR7LfJ
-  sleep 5
-  source bin/setup_mailsv.sh email add two@plusqo.com xUbIt8eTTOwkn830qxC1ybK0TxyR7LfJ
-  sleep 5
-  source bin/setup_mailsv.sh email add three@plusqo.com xUbIt8eTTOwkn830qxC1ybK0TxyR7LfJ
-  sleep 5
-  source bin/setup_mailsv.sh alias add tech@plusqo.com chupi@kih.biglobe.ne.jp
-  sleep 5
+  bundle exec rake email:init
   bundle exec rake service:mailsv[stop]
   bundle exec rake service:mailsv
 EOS

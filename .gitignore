@@ -25,6 +25,8 @@ deploy_secrets/*
 master.key
 /.bundle
 .env
+config/mailsv/*
+!config/mailsv/.gitkeep
 config/app.yml
 config/utils.yml
 config/deploy.yml

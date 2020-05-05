@@ -20,13 +20,23 @@ namespace :db do
 
   desc 'Drop all databases'
   task :drop do
-    sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE peatio_production'")
-    sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE barong_production'")
-    sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE superset'")
+    puts "Disabled (see source)"
+    #sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE peatio_production'")
+    #sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE barong_production'")
+    #sh %q(docker-compose run --rm db /bin/sh -c "mysql -u root -h db -P 3306 -pchangeme -e 'DROP DATABASE superset'")
   end
 
   desc 'Database Console'
   task :console do
     sh "docker-compose run --rm db #{mysql_cli}"
   end
+
+  desc 'Backup to [local(~/opendax_datetime.sql.tar.bz2)|remote]'
+  task :backup do
+  end
+
+  desc 'Restore from file in ~ [opendax_datetime.sql.tar.bz2]'
+  task :restore do
+  end
+
 end

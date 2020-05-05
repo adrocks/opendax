@@ -55,16 +55,16 @@ resource "google_compute_instance" "mailsv" {
       '"mkdir -p /home/deploy/opendax"'+
     ']'
   ) %>
-  <% RendererHelperGcp::provisioner_local_exec(
+  <%= RendererHelperGcp::provisioner_local_exec(
     '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
   ) %>
-  <% RendererHelperGcp::provisioner_file(
+  <%= RendererHelperGcp::provisioner_file(
     'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
   ) %>
-  <% RendererHelperGcp::provisioner_remote_exec(
+  <%= RendererHelperGcp::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/install_mailsv.sh"'
   ) %>
-  <% RendererHelperGcp::provisioner_remote_exec(
+  <%= RendererHelperGcp::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/start_mailsv.sh"'
   ) %>
 

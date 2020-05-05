@@ -14,7 +14,7 @@ services:
       - mailstate:/var/mail-state
       - maillogs:/var/log/mail
       - mailconfig:/tmp/docker-mailserver/
-      #- ../config/mailserver/:/tmp/docker-mailserver/
+      - ../config/mailsv/:/tmp/docker-mailserver/
       - /etc/letsencrypt:/etc/letsencrypt:ro
     environment:
       - ENABLE_SPAMASSASSIN=0

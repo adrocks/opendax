@@ -10,7 +10,7 @@ resource "hcloud_server" "mailsv" {
   datacenter = var.zone
   ssh_keys = ["${data.hcloud_ssh_key.opendax.id}"]
   <%= RendererHelperHc::provisioner_remote_exec(
-    'root', RendererHelperHc::root_user_init("#{@deploy['hcloud']['root_password']}")
+    'root', RendererHelperHc::root_user_init("mailsv-hc")
   ) %>
   <%= RendererHelperHc::provisioner_file(
     'deploy', 'var.ssh_private_key', '"/home/deploy/.ssh/id_rsa"'
@@ -18,16 +18,16 @@ resource "hcloud_server" "mailsv" {
   <%= RendererHelperHc::provisioner_remote_exec(
     'deploy', RendererHelperHc::deploy_user_init
   ) %>
-  <% RendererHelperHc::provisioner_local_exec(
+  <%= RendererHelperHc::provisioner_local_exec(
     '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
   ) %>
-  <% RendererHelperHc::provisioner_file(
+  <%= RendererHelperHc::provisioner_file(
     'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'
   ) %>
-  <% RendererHelperHc::provisioner_remote_exec(
+  <%= RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/install_mailsv.sh"'
   ) %>
-  <% RendererHelperHc::provisioner_remote_exec(
+  <%= RendererHelperHc::provisioner_remote_exec(
     'deploy', 'script = "../../../bin/start_mailsv.sh"'
   ) %>
 

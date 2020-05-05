@@ -10,7 +10,7 @@ start_opendax() {
   cd opendax
   bundle install --path vendor/bundle
   bundle exec rake render:config
-  bundle exec rake service:cryptonodes
+  bundle exec rake service:logagent
 EOS
 }
 

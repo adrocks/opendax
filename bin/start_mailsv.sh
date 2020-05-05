@@ -10,6 +10,7 @@ start_opendax() {
   cd opendax
   bundle install --path vendor/bundle
   bundle exec rake render:config
+  bundle exec rake service:logagent
   bundle exec rake service:mailsv
   bundle exec rake email:init
   bundle exec rake service:mailsv[stop]

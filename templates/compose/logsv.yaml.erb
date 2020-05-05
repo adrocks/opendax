@@ -35,7 +35,7 @@ services:
     image: docker.elastic.co/kibana/kibana:6.8.8
     environment:
       - LOGSPOUT=ignore
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_URL=http://elasticsearch_sv:9200
     ports:
       - 8080:5601
 

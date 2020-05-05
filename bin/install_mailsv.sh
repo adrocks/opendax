@@ -26,7 +26,7 @@ install_firewall() {
   systemctl enable ufw
   systemctl restart ufw
   ufw allow ssh
-  ufw allow 822
+  ufw allow 822/tcp
   ufw allow 80/tcp
   ufw allow 8080/tcp
   ufw allow 1337/tcp

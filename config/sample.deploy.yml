@@ -1,3 +1,4 @@
+delete_tf_files: true
 common:
   ssh_key: "../../../deploy_secrets/ssh_key.txt"
   ssh_key_pub: "../../../deploy_secrets/ssh_key.pub.txt"

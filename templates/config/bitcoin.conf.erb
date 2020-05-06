@@ -8,6 +8,11 @@ server=1
 testnet=3
 [test]
 <%- end -%>
+
+# https://github.com/bitcoin/bitcoin/blob/master/doc/bitcoin-conf.md#network-specific-options
+# Network specific options can be:
+# placed into sections with headers [main], [test] or [regtest]
+
 rpcuser=<%= bitcoind['rpcuser'] %>
 rpcpassword=<%= bitcoind['rpcpassword'] %>
 port=<%= bitcoind['port'] %>

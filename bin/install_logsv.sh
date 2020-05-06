@@ -16,7 +16,6 @@ install_firewall() {
   ufw allow 8080/tcp
   ufw allow 1337/tcp
   ufw allow 443/tcp
-  ufw allow 5000/tcp
   yes | ufw enable
   ufw reload
   ufw status verbose

@@ -19,7 +19,7 @@ resource "hcloud_server" "logsv-<%= @config['mode'] %>" {
     'deploy', RendererHelperHc::deploy_user_init
   ) %>
   <%= RendererHelperHc::provisioner_local_exec(
-    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links --exclude=terraform ../../../ /tmp/upload/"'
+    '"rm -rf /tmp/upload && mkdir -p /tmp/upload && rsync -rv --copy-links --safe-links ../../../ /tmp/upload/"'
   ) %>
   <%= RendererHelperHc::provisioner_file(
     'deploy', '"/tmp/upload/"', '"/home/deploy/opendax"'

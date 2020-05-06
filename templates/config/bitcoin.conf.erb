@@ -1,18 +1,15 @@
 <%- bitcoind = @config['bitcoind'] -%>
 txindex=1
-dnsseed=0
+dnsseed=1
 upnp=0
 printtoconsole=1
-
 server=1
-
-<%- unless bitcoind['network'] == 'mainnet' -%>
-<%= "#{bitcoind['network']}=1" %>
-[test]
-<%- end -%>
 rpcuser=<%= bitcoind['rpcuser'] %>
 rpcpassword=<%= bitcoind['rpcpassword'] %>
+<%- unless bitcoind['network'] == 'mainnet' -%>
+testnet=3
+<%- end -%>
 port=<%= bitcoind['port'] %>
 rpcport=<%= bitcoind['rpcport'] %>
 rpcbind=0.0.0.0
-rpcallowip=0.0.0.0/0
+rpcallowip=10.0.0.0/8

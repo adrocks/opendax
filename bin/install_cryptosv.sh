@@ -3,7 +3,8 @@
 source /home/$USER/opendax/bin/install_lib.sh
 
 # 30303 parity port
-# 18333 bitcoind port
+# 8333 bitcoind port mainnet
+# 18333 bitcoind port testnet
 install_firewall() {
   sudo bash <<EOS
   apt install -y -q ufw
@@ -19,6 +20,7 @@ install_firewall() {
   ufw allow 1337/tcp
   ufw allow 443/tcp
   ufw allow 30303/tcp
+  ufw allow 8333/tcp
   ufw allow 18333/tcp
   yes | ufw enable
   ufw reload

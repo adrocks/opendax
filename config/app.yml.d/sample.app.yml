@@ -92,6 +92,10 @@ parity:
   address: parity
   rpcport: 8545
   port: 30303
+  height: 18373826
+  explorer:
+    address: https://kovan.etherscan.io/address/#{address}
+    transaction: https://kovan.etherscan.io/tx/#{txid}
 bitcoind:
   enabled: false
   rpcuser: admin

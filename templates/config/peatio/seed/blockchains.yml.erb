@@ -2,11 +2,11 @@
   name:              Ethereum <%= @config['parity']['network'].capitalize %>
   client:            parity
   server:            http://<%= @config['parity']['address'] %>:<%= @config['parity']['rpcport'] %>
-  height:            8670000
+  height:            <%= @config['parity']['height'] %>
   min_confirmations: 6
   explorer:
-    address:         https://etherscan.io/address/#{address}
-    transaction:     https://etherscan.io/tx/#{txid}
+    address:         <%= @config['parity']['explorer']['address'] %>
+    transaction:     <%= @config['parity']['explorer']['transaction'] %>
   status:            active
 
 <% if @config['bitcoind']['enabled'] %>

@@ -1,11 +1,22 @@
 version: '3.6'
 
+#https://openethereum.github.io/wiki/Chain-specification
+#
+#By default, when simply running parity,
+#Parity Ethereum will connect to the official public Ethereum network.
+#
+#Chain presets available
+#mainnet (default) main Ethereum network
+#kovan or testnet the fast Ethereum test network
+
 services:
   parity:
     image: parity/parity:v2.5.13-stable
     restart: always
     command: |
+<%- if (@config['parity']['network'] != 'mainnet') -%>
       --chain=kovan
+<%- end -%>
       --mode=active
       --interface=all
       --warp=true

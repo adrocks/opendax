@@ -148,6 +148,14 @@ gcp:
   cryptosv_machine_type: n1-standard-2
   cryptosv_disk_size: 30
 hc:
+  tf_exec:
+    network: true
+    volumes: true
+    mailsv: true
+    cryptosv: true
+    logsv: true
+    peatio: true
+    remote: true
   peatio_machine_type: cx11
   peatio_machine_ip: '10.0.10.12'
   cryptosv_machine_type: cx11

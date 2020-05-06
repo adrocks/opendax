@@ -14,10 +14,10 @@
   name:              Bitcoin <%= @config['bitcoind']['network'].capitalize %>
   client:            bitcoin
   server:            http://<%= @config['bitcoind']['rpcuser'] %>:<%= @config['bitcoind']['rpcpassword'] %>@<%= @config['bitcoind']['address'] %>:<%= @config['bitcoind']['rpcport'] %>
-  height:            597000
+  height:            <%= @config['bitcoind']['height'] %>
   min_confirmations: 6
   explorer:
-    address:         https://blockchain.info/address/#{address}
-    transaction:     https://blockchain.info/tx/#{txid}
+    address:         <%= @config['bitcoind']['explorer']['address'] %>
+    transaction:     <%= @config['bitcoind']['explorer']['transaction'] %>
   status:            active
 <% end %>

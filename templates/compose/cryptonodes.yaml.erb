@@ -24,7 +24,9 @@ services:
     ports:
       #- "127.0.0.1:8545:8545"
       - "8545:8545"
+      - "8546:8546"
       - "30303:30303"
+      - "30303:30303/udp"
 
   bitcoind:
     image: quay.io/openware/bitcoind:0.17.1
@@ -35,6 +37,8 @@ services:
       # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
     ports:
+      - "8332:8332"
+      - "8333:8333"
       - "18332:18332"
       - "18333:18333"
 

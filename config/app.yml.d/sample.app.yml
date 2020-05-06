@@ -5,7 +5,7 @@
 #
 # This is a SAMPLE of *.app.yml
 # You have to copy this to local.app.yml and edit for yourself.
-# and bundle exec rake render:select[local]
+# and bundle exec rake r:c[local]
 ################################################################################
 mode: "sample"
 app:
@@ -98,12 +98,19 @@ parity:
     transaction: https://kovan.etherscan.io/tx/#{txid}
 bitcoind:
   enabled: false
+  dnsseed: 1
+  upnp: 0
+  rpcallowip: "10.0.0.0/8"
   rpcuser: admin
   rpcpassword: changeme
   address: bitcoind
   network: testnet
   rpcport: 18332
   port: 18333
+  height: 1723074
+  explorer:
+    address: https://live.blockcypher.com/btc-testnet/address/#{address}/
+    transaction: https://live.blockcypher.com/btc-testnet/tx/#{txid}/
 litecoind:
   rpcuser: admin
   rpcpassword: changeme

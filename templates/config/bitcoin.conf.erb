@@ -1,7 +1,7 @@
 <%- bitcoind = @config['bitcoind'] -%>
 txindex=1
-dnsseed=1
-upnp=0
+dnsseed=<%= bitcoind['dnsseed'] %>
+upnp=<%= bitcoind['upnp'] %>
 printtoconsole=1
 server=1
 rpcuser=<%= bitcoind['rpcuser'] %>
@@ -12,4 +12,4 @@ testnet=3
 port=<%= bitcoind['port'] %>
 rpcport=<%= bitcoind['rpcport'] %>
 rpcbind=0.0.0.0
-rpcallowip=10.0.0.0/8
+rpcallowip=<%= bitcoind['rpcallowip'] %>

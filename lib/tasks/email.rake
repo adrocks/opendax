@@ -10,15 +10,16 @@ namespace :email do
     ENV['IMAGE_NAME']=@config['images']['mailsv']
     sh "rm -f ./config/mailsv/postfix-accounts.cf"
     sh "rm -f ./config/mailsv/postfix-virtual.cf"
-    sh "chmod +x bin/setup_mailsv.sh"
-    @config['mailsv']['emails'].each { |r|
-      sh "bin/setup_mailsv.sh email add #{r['address']} #{r['password']}"
+    Dir.chdir("./bin") {
+      @config['mailsv']['emails'].each { |r|
+        sh "/bin/bash -c 'source ./setup_mailsv.sh email add #{r['address']} #{r['password']}'"
+      }
+      @config['mailsv']['aliases'].each { |r|
+        sh  "/bin/bash -c 'source ./setup_mailsv.sh alias add #{r['address']} #{r['to']}'"
+      }
+      sh "/bin/bash -c 'source ./setup_mailsv.sh email list'"
+      sh "/bin/bash -c 'source ./setup_mailsv.sh alias list'"
     }
-    @config['mailsv']['aliases'].each { |r|
-      sh  "bin/setup_mailsv.sh alias add #{r['address']} #{r['to']}"
-    }
-    sh "bin/setup_mailsv.sh email list"
-    sh "bin/setup_mailsv.sh alias list"
   end
 
 end

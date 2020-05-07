@@ -92,6 +92,7 @@ parity:
   address: parity
   rpcport: 8545
   port: 30303
+  rpc_host_ip: 10.0.10.13
   height: 18373826
   explorer:
     address: https://kovan.etherscan.io/address/#{address}
@@ -107,6 +108,7 @@ bitcoind:
   network: testnet
   rpcport: 18332
   port: 18333
+  rpc_host_ip: 10.0.10.13
   height: 1723074
   explorer:
     address: https://live.blockcypher.com/btc-testnet/address/#{address}/

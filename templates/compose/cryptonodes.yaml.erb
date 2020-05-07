@@ -34,8 +34,8 @@ services:
       - parity_data:/home/parity/.local/share/io.parity.ethereum
     ports:
       #- "127.0.0.1:8545:8545"
-      - "8545:8545"
-      - "8546:8546"
+      - "<%= @config['parity']['rpc_host_ip'] %>:8545:8545"
+      - "<%= @config['parity']['rpc_host_ip'] %>:8546:8546"
       - "30303:30303"
       - "30303:30303/udp"
 
@@ -48,9 +48,9 @@ services:
       # See lib/tasks/render.rake
       - ../config/bitcoin.conf:/bitcoin/.bitcoin/bitcoin.conf
     ports:
-      - "8332:8332"
+      - "<%= @config['bitcoind']['rpc_host_ip'] %>:8332:8332"
       - "8333:8333"
-      - "18332:18332"
+      - "<%= @config['bitcoind']['rpc_host_ip'] %>:18332:18332"
       - "18333:18333"
 
 #  litecoind:

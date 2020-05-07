@@ -1,9 +1,15 @@
+require_relative '../opendax/util'
+
 namespace :service do
   ENV['APP_DOMAIN'] = @config['app']['domain']
 
   @switch = Proc.new do |args, start, stop|
     case args.command
     when 'start'
+      if (!Opendax::Util::check_hostname_and_status) then
+        Opendax::Util::show_command_status
+        next
+      end  
       start.call
     when 'stop'
       stop.call

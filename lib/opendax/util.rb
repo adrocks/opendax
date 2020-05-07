@@ -10,6 +10,12 @@ module Opendax
     def self.check_hostname_and_status
       
       host = `hostname`.strip
+
+      # TODO: for special cases
+      if (host.include?('coinh')) then
+        host = 'special-prd'
+      end
+
       conf = JSON.parse(File.read('./config/render.json'))
       
       if (host.include?('-stg1')) then

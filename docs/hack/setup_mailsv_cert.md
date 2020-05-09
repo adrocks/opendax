@@ -127,7 +127,7 @@ sudo crontab -e
 ## Setup DKIM
 
 ```
-~/opendax/bin/setup_mailsv.sh config dkim
+source ~/opendax/bin/setup_mailsv.sh config dkim
 ```
 
 

@@ -139,6 +139,9 @@ mailsv:
       to: "user@another.domain.com"
 nginx:
   hostport: 18080
+logsv:
+  host_name: "logsv.app.local"
+  basic_auth: admin:$$apr1$$IQD9ABAW$$WB0N1Dh4yZ91As5QaYXn8.    
 logagent:
   syslog_host: 10.0.10.14
   retry_count: 100

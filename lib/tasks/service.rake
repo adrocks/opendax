@@ -407,12 +407,13 @@ namespace :service do
       puts '----- Starting the LogServer -----'
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/es_sv_data"
       sh "sudo chmod a+w #{@config['app']['docker_volumes_path']}/es_sv_data"
-      sh 'docker-compose up -d logstashsv elasticsearchsv kibanasv'
+      File.new('config/acme_logsv.json', File::CREAT, 0600) unless File.exist? 'config/acme_logsv.json'
+      sh 'docker-compose up -d proxylogsv logstashsv elasticsearchsv kibanasv'
     end
 
     def stop
       puts '----- Stopping the LogServer -----'
-      sh 'docker-compose rm -fs logstashsv elasticsearchsv kibanasv'
+      sh 'docker-compose rm -fs proxylogsv logstashsv elasticsearchsv kibanasv'
     end
 
     @switch.call(args, method(:start), method(:stop))

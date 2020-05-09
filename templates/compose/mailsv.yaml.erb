@@ -46,8 +46,3 @@ volumes:
       type: none
       device: "<%= @config['app']['docker_volumes_path'] %>/maillogs"
       o: bind
-  mailconfig:
-    driver_opts:
-      type: none
-      device: "<%= @config['app']['docker_volumes_path'] %>/mailconfig"
-      o: bind

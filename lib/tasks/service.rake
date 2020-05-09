@@ -352,8 +352,6 @@ namespace :service do
       sh "sudo chmod a+w #{@config['app']['docker_volumes_path']}/mailstate"
       sh "mkdir -p #{@config['app']['docker_volumes_path']}/maillogs"
       sh "sudo chmod a+w #{@config['app']['docker_volumes_path']}/maillogs"
-      sh "mkdir -p #{@config['app']['docker_volumes_path']}/mailconfig"
-      sh "sudo chmod a+w #{@config['app']['docker_volumes_path']}/mailconfig"
       sh 'docker-compose up -d mailsv'
     end
 

@@ -161,9 +161,9 @@ hc:
     logsv: true
     peatio: true
     remote: true
-  peatio_machine_type: cx11
+  peatio_machine_type: cx21
   peatio_machine_ip: '10.1.1.2'
-  cryptosv_machine_type: cx11
+  cryptosv_machine_type: cx21
   cryptosv_machine_ip: '10.1.1.3'
-  logsv_machine_type: cx11
+  logsv_machine_type: cx21
   logsv_machine_ip: '10.1.1.4'

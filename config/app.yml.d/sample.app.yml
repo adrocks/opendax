@@ -146,6 +146,13 @@ logagent:
   syslog_host: 10.0.10.14
   retry_count: 100
 gcp:
+  tf_exec:
+    network: true
+    mailsv: true
+    cryptosv: true
+    logsv: true
+    peatio: true
+    remote: true
   peatio_machine_type: n1-standard-2
   peatio_disk_size: 30
   logsv_machine_type: n1-standard-2

@@ -145,6 +145,8 @@ logsv:
 logagent:
   syslog_host: 10.0.10.14
   retry_count: 100
+slack:
+  webhook_url: https://hooks.slack.com/services/xxx/xxx/xxx  
 gcp:
   tf_exec:
     network: true

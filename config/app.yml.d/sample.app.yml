@@ -146,7 +146,9 @@ logagent:
   syslog_host: 10.0.10.14
   retry_count: 100
 slack:
-  webhook_url: https://hooks.slack.com/services/xxx/xxx/xxx  
+  webhook_url: https://hooks.slack.com/services/xxx/xxx/xxx
+monit:
+  disk_threshold: "85%"
 gcp:
   tf_exec:
     network: true
